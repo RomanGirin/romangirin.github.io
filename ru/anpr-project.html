@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANPR / система распознавания номеров | Роман Гирин</title>
+    <meta name="description" content="Система распознавания автомобильных номеров (ANPR) для контроля доступа автотранспорта, разработанная Романом Гириным для ООО «Экосмарт» &mdash; кастомный детектор MTCNN, распознаватель номеров и промышленное внедрение.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f172a'/%3E%3Ctext x='32' y='43' font-family='Arial,Helvetica,sans-serif' font-size='26' font-weight='700' fill='%2338bdf8' text-anchor='middle'%3ERG%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b1220;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --accent-2: #a78bfa;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(700px circle at 15% -5%, rgba(56, 189, 248, 0.12), transparent 60%),
+                radial-gradient(700px circle at 90% 10%, rgba(167, 139, 250, 0.10), transparent 55%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        h1, h2, .subtitle { font-family: 'Sora', 'Inter', system-ui, sans-serif; }
+        .container { max-width: 800px; width: 100%; }
+        .back-link { color: var(--accent-color); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        h1 { margin: 1.5rem 0 0.25rem; font-size: 2rem; font-weight: 700; }
+        .subtitle { color: var(--text-muted); margin-bottom: 2rem; }
+        h2 {
+            display: flex; align-items: center; gap: 0.6rem;
+            border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 2.5rem;
+        }
+        h2::before {
+            content: ''; width: 9px; height: 9px; border-radius: 3px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
+            display: inline-block; flex-shrink: 0;
+        }
+        p { color: var(--text-color); }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 1.5rem 0; }
+        .tags li { background: #334155; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; }
+        .highlight-note { color: var(--accent-color); font-weight: bold; }
+        .project-figure { background: #fff; border-radius: 8px; padding: 0.75rem; margin: 1.5rem 0; }
+        .project-figure img { display: block; width: 100%; border-radius: 4px; }
+        .project-figure figcaption { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem; text-align: center; }
+        ul.highlights { color: var(--text-color); padding-left: 1.25rem; }
+        ul.highlights li { margin-bottom: 0.6rem; }
+        footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <a class="back-link" href="index.html">&larr; Назад к портфолио</a>
+            <a class="back-link" href="../anpr-project.html">EN</a>
+        </div>
+        <h1>Система распознавания автомобильных номеров (ANPR)</h1>
+        <p class="subtitle">ООО «Экосмарт» &mdash; система контроля доступа автотранспорта</p>
+
+        <ul class="tags">
+            <li>PyTorch</li>
+            <li>MTCNN</li>
+            <li>OpenCV</li>
+            <li>MLFlow</li>
+            <li>DVC</li>
+        </ul>
+
+        <p>Система распознавания автомобильных номеров для контроля доступа автотранспорта, построенная для
+            реального объекта: камеры передают кадры в кастомный нейросетевой пайплайн, который детектирует и
+            считывает номера, сверяет их с ежедневным белым списком, при необходимости открывает шлагбаум и
+            передаёт каждое обнаружение на бэкенд с веб-интерфейсом для операторов.</p>
+
+        <h2>Обзор</h2>
+        <p>Система автоматизирует контроль доступа на въезде объекта. Камеры наблюдают за въездом; кастомный
+            пайплайн глубокого обучения (MTCNN для детекции номера, STN + сеть-распознаватель для считывания)
+            находит номерной знак в каждом кадре и считывает его прямо с живого потока &mdash; без ручной
+            проверки. Каждое считывание сверяется с ежедневным списком ожидаемого транспорта, который формирует
+            логистика для загрузки или разгрузки; при совпадении шлагбаум может открыться автоматически, а
+            каждое обнаружение &mdash; совпавшее или нет &mdash; логируется для проверки операторами.</p>
+
+        <figure class="project-figure">
+            <img src="../assets/anpr/detected-vehicle.png" alt="Номер грузовика обнаружен и считан прямо с камеры">
+            <figcaption>Обнаруженный автомобиль: номер найден и считан прямо с кадра камеры, вместе с уверенностью распознавания.</figcaption>
+        </figure>
+
+        <figure class="project-figure">
+            <img src="../assets/anpr/detections-log.png" alt="Журнал обнаружений со всеми считанными номерами, датой/временем, фильтрацией и переключателем языка">
+            <figcaption>Журнал обнаружений: каждое считывание, с фильтрацией и действием просмотра/удаления по каждой строке для проверки оператором. Интерфейс также поддерживает переключение языков.</figcaption>
+        </figure>
+
+        <figure class="project-figure">
+            <img src="../assets/anpr/expected-vehicles.png" alt="Список ожидаемого транспорта, который операторы используют для регистрации въезжающих грузовиков">
+            <figcaption>Список ожидаемого транспорта, который операторы используют для планирования въезда грузовиков; прибытия сверяются с ним автоматически, а отмеченные как прибывшие &mdash; выделяются.</figcaption>
+        </figure>
+
+        <h2>Ключевые результаты</h2>
+        <ul class="highlights">
+            <li><strong>Проектирование ANPR-системы.</strong> Спроектировал и реализовал систему распознавания автомобильных номеров (ANPR) от начала до конца на кастомных глубоких сетях (MTCNN, STR-Net).</li>
+            <li><strong>Оптимизация пайплайна MTCNN.</strong> Провёл глубокий анализ MTCNN и перестроил пайплайн детекции на P-Net и O-Net, полностью исключив R-Net &mdash; снижение нагрузки на GPU без потери точности.</li>
+            <li><strong>Инструменты для датасетов и экспериментов.</strong> Кастомизировал LabelImg под формат метаданных компании, руководил командой разметки, построил пайплайн валидации датасетов; настроил on-prem версионирование данных и экспериментов (MLFlow, DVC).</li>
+            <li><strong>Бизнес-эффект.</strong> Автоматическое распознавание ожидаемых автопоездов на подъезде к объекту, интегрированное с логистической системой оповещений, устранило простои транспорта и ускорило разгрузку.</li>
+        </ul>
+
+        <p>В продакшене такое автоматическое распознавание ожидаемого транспорта &mdash; интегрированное с
+            логистической системой оповещений &mdash; устранило простои транспорта на въезде и ускорило
+            разгрузку, убрав ручную сверку каждого грузовика с расписанием на день.</p>
+
+        <p class="highlight-note">(приватный репозиторий &mdash; готов предоставить доступ или демо по запросу)</p>
+
+        <footer>
+            <a class="back-link" href="index.html">&larr; Назад к портфолио</a>
+        </footer>
+    </div>
+</body>
+</html>

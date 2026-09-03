@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GCNN LP-Feasibility POC | Roman Girin</title>
-    <meta name="description" content="Graph neural network proof-of-concept by Roman Girin for RiverLogic's VCO software: pre-solve LP feasibility estimation via GCNN, PyTorch Geometric, and t-SNE cluster analysis.">
+    <title>GCNN-прототип оценки разрешимости LP | Роман Гирин</title>
+    <meta name="description" content="Прототип графовой нейросети Романа Гирина для ПО RiverLogic VCO: предварительная оценка разрешимости LP-задач через GCNN, PyTorch Geometric и анализ кластеров t-SNE.">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f172a'/%3E%3Ctext x='32' y='43' font-family='Arial,Helvetica,sans-serif' font-size='26' font-weight='700' fill='%2338bdf8' text-anchor='middle'%3ERG%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,11 +70,11 @@
 <body>
     <div class="container">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <a class="back-link" href="index.html">&larr; Back to portfolio</a>
-            <a class="back-link" href="ru/gcnn-poc.html">RU</a>
+            <a class="back-link" href="index.html">&larr; Назад к портфолио</a>
+            <a class="back-link" href="../gcnn-poc.html">EN</a>
         </div>
-        <h1>Graph Neural Net for LP Feasibility Pre-Screening</h1>
-        <p class="subtitle">R&amp;D proof-of-concept &mdash; RiverLogic Value Chain Optimization (VCO) software</p>
+        <h1>Графовая нейросеть для оценки разрешимости LP-задач</h1>
+        <p class="subtitle">R&amp;D-прототип &mdash; ПО RiverLogic Value Chain Optimization (VCO)</p>
 
         <ul class="tags">
             <li>PyTorch Geometric</li>
@@ -84,59 +84,58 @@
             <li>SciPy</li>
         </ul>
 
-        <p>Solving a linear programming (LP) problem to determine it's infeasible can itself be expensive.
-            This proof-of-concept explores whether a small graph neural network can pre-screen an LP problem's
-            feasibility cheaply, before committing to a full solve &mdash; a lightweight gate in front of
-            RiverLogic's VCO solver pipeline.</p>
+        <p>Решение задачи линейного программирования (LP) только для того, чтобы установить её неразрешимость,
+            само по себе может быть затратным. Этот прототип исследует, может ли небольшая графовая нейросеть
+            дёшево оценивать разрешимость LP-задачи ещё до полного решения &mdash; лёгкий фильтр перед солвером
+            VCO компании RiverLogic.</p>
 
-        <h2>Hypothesis</h2>
-        <p>We proposed estimating LP feasibility using a graph convolutional neural network (GCNN).
-            Representing an LP problem as a bipartite graph is a scientifically grounded approach
+        <h2>Гипотеза</h2>
+        <p>Мы предложили оценивать разрешимость LP-задач с помощью графовой свёрточной нейросети (GCNN).
+            Представление LP-задачи в виде двудольного графа &mdash; научно обоснованный подход
             (<a href="https://arxiv.org/abs/2012.13349" target="_blank" style="color: var(--accent-color);">arXiv:2012.13349</a>,
             <a href="https://arxiv.org/abs/2302.05636" target="_blank" style="color: var(--accent-color);">arXiv:2302.05636</a>),
-            and using that graph representation to make general approximate estimations about the problem is
-            likewise supported by recent literature
+            и использование такого графового представления для приближённых оценок задачи также подтверждается
+            недавними работами
             (<a href="https://proceedings.mlr.press/v238/qian24a/qian24a.pdf" target="_blank" style="color: var(--accent-color);">Qian et al., 2024</a>).
-            The conversion from matrix representation to bipartite graph (and back) is straightforward, and
-            production-ready GCNN implementations already exist in
+            Преобразование из матричного представления в двудольный граф (и обратно) тривиально, а готовые к
+            использованию реализации GCNN уже существуют в
             <a href="https://pytorch-geometric.readthedocs.io" target="_blank" style="color: var(--accent-color);">PyTorch Geometric</a>.</p>
 
-        <h2>Data</h2>
-        <p>No dataset of customer models was available for this demo, so synthetic ones were generated instead:
-            ~5,000 LP problems for the training set and ~2,000 for the test set, keeping a 50/50 split between
-            feasible and infeasible instances. Since this was supervised learning, ground-truth
-            feasible/infeasible labels were produced by actually solving each generated problem with SciPy's
-            <code>linprog()</code>. Production use would call for a representative dataset of real customer
-            models and a production-grade LP solver.</p>
+        <h2>Данные</h2>
+        <p>Датасета реальных моделей клиентов для демонстрации не было, поэтому были сгенерированы синтетические:
+            ~5000 LP-задач для обучающей выборки и ~2000 &mdash; для тестовой, с соотношением 50/50 между
+            разрешимыми и неразрешимыми экземплярами. Поскольку это было обучение с учителем, эталонные метки
+            разрешима/неразрешима были получены реальным решением каждой сгенерированной задачи через SciPy
+            <code>linprog()</code>. Для продакшена потребовался бы репрезентативный датасет реальных моделей
+            клиентов и промышленный LP-солвер.</p>
 
-        <h2>Results</h2>
-        <p>Even in this first, crude pass, the trained model reached <strong>~92% accuracy</strong> &mdash;
-            with room to improve given more time for research and experimentation. More telling than the
-            accuracy number alone: projecting the model's learned embeddings with t-SNE shows feasible and
-            infeasible LP instances separating into distinct clusters, which is clear evidence the GCNN can
-            actually tell feasible from infeasible LPs rather than just fitting the synthetic labels (some
-            outliers remain and would need further investigation). Pre-solve feasibility estimation via a GCNN
-            this small turned out to be a solvable task.</p>
-        <p class="result-highlight">In our experience, a full solve of VCO (Value Chain Optimization) models
-            through production LP solvers can take several hours &mdash; the matrix representations these models
-            present to LP solvers are considerable. A pre-solve check this cheap could save customers
-            substantial time and compute by flagging an infeasible or crudely broken model upfront, before
-            committing to a full solve.</p>
+        <h2>Результаты</h2>
+        <p>Уже в этом первом, черновом прогоне обученная модель достигла <strong>~92% точности</strong> &mdash;
+            с запасом на улучшение при дополнительном времени на исследования и эксперименты. Показательнее
+            самой точности: проекция обученных эмбеддингов модели через t-SNE показывает, что разрешимые и
+            неразрешимые LP-экземпляры разделяются на отдельные кластеры &mdash; это чёткое свидетельство того,
+            что GCNN действительно отличает разрешимые LP от неразрешимых, а не просто подстраивается под
+            синтетические метки (есть отдельные выбросы, которые требуют дальнейшего изучения). Предварительная
+            оценка разрешимости настолько небольшой GCNN-моделью оказалась решаемой задачей.</p>
+        <p class="result-highlight">По нашему опыту, полное решение VCO-моделей промышленными LP-солверами может
+            занимать несколько часов &mdash; матричные представления таких моделей для LP-солверов весьма
+            значительны. Такая дешёвая предварительная проверка может сэкономить клиентам существенное время и
+            вычислительные ресурсы, отсеивая неразрешимые или грубо некорректные модели ещё до полного решения.</p>
 
         <div class="figure-row">
             <figure class="project-figure">
-                <img src="assets/gcnn-tsne-2d.png" alt="2D t-SNE projection of GCNN LP-problem embeddings, showing feasible and infeasible instances separating into distinct clusters">
-                <figcaption>2D t-SNE projection of the GCNN's learned embeddings.</figcaption>
+                <img src="../assets/gcnn-tsne-2d.png" alt="2D-проекция t-SNE эмбеддингов GCNN, показывающая разделение разрешимых и неразрешимых экземпляров на отдельные кластеры">
+                <figcaption>2D-проекция t-SNE обученных эмбеддингов GCNN.</figcaption>
             </figure>
             <figure class="project-figure">
-                <img src="assets/gcnn-tsne-3d.png" alt="3D t-SNE projection of GCNN LP-problem embeddings">
-                <figcaption>3D t-SNE projection of the same embeddings.</figcaption>
+                <img src="../assets/gcnn-tsne-3d.png" alt="3D-проекция t-SNE эмбеддингов GCNN">
+                <figcaption>3D-проекция t-SNE тех же эмбеддингов.</figcaption>
             </figure>
         </div>
 
-        <h2>Model</h2>
-        <p>The experimental model structure, for reference (further research/tuning would follow in a
-            production track):</p>
+        <h2>Модель</h2>
+        <p>Структура экспериментальной модели, для справки (дальнейшее исследование/тюнинг потребовались бы в
+            продакшен-треке):</p>
         <pre><code>import torch
 from torch.nn import Linear
 import torch.nn.functional as F
@@ -170,8 +169,8 @@ class GCN(torch.nn.Module):
         x = self.lin(x)
         return x</code></pre>
 
-        <p>Or the model's own <code>print()</code> representation, whichever is more readable &mdash; note how
-            small it is for the result it delivers:</p>
+        <p>Или собственное <code>print()</code>-представление модели, что удобнее для чтения &mdash; обратите
+            внимание, насколько она компактна для такого результата:</p>
         <pre class="model-repr"><code>GCN(
   (conv1): GCNConv(4, 16)
   (conv2): GCNConv(16, 16)
@@ -180,7 +179,7 @@ class GCN(torch.nn.Module):
   (lin): Linear(in_features=16, out_features=2, bias=True)
 )</code></pre>
 
-        <h2>References</h2>
+        <h2>Источники</h2>
         <ul class="refs">
             <li><a href="https://arxiv.org/abs/2012.13349" target="_blank">Combinatorial optimization and reasoning with graph neural networks &mdash; arXiv:2012.13349</a></li>
             <li><a href="https://arxiv.org/abs/2302.05636" target="_blank">arXiv:2302.05636</a></li>
@@ -190,10 +189,10 @@ class GCN(torch.nn.Module):
         </ul>
 
         <footer>
-            Proprietary R&amp;D done for RiverLogic Inc. &mdash; shared here as a technical write-up, not
-            production code. Happy to walk through the full implementation on request.
+            Собственная R&amp;D-разработка для RiverLogic Inc. &mdash; представлена здесь как техническое
+            описание, а не production-код. Готов подробно разобрать полную реализацию по запросу.
             <br><br>
-            <a class="back-link" href="index.html">&larr; Back to portfolio</a>
+            <a class="back-link" href="index.html">&larr; Назад к портфолио</a>
         </footer>
     </div>
 </body>

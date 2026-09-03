@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модернизация платформы RiverLogic VCO | Роман Гирин</title>
+    <meta name="description" content="Кейс-стади: десятилетняя архитектурная модернизация платформы Value Chain Optimization компании RiverLogic &mdash; от 2-звенного монолита к событийно-ориентированным микросервисам на Azure, плюс интеграция корпоративного ИИ.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f172a'/%3E%3Ctext x='32' y='43' font-family='Arial,Helvetica,sans-serif' font-size='26' font-weight='700' fill='%2338bdf8' text-anchor='middle'%3ERG%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b1220;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --accent-2: #a78bfa;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(700px circle at 15% -5%, rgba(56, 189, 248, 0.12), transparent 60%),
+                radial-gradient(700px circle at 90% 10%, rgba(167, 139, 250, 0.10), transparent 55%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        h1, h2, .subtitle { font-family: 'Sora', 'Inter', system-ui, sans-serif; }
+        .container { max-width: 800px; width: 100%; }
+        .back-link { color: var(--accent-color); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        h1 { margin: 1.5rem 0 0.25rem; font-size: 2rem; font-weight: 700; }
+        .subtitle { color: var(--text-muted); margin-bottom: 1.5rem; }
+        h2 {
+            display: flex; align-items: center; gap: 0.6rem;
+            border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 2.5rem;
+        }
+        h2::before {
+            content: ''; width: 9px; height: 9px; border-radius: 3px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
+            display: inline-block; flex-shrink: 0;
+        }
+        p { color: var(--text-color); }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 1.5rem 0; }
+        .tags li { background: #334155; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; }
+        .highlight-note { color: var(--accent-color); font-weight: bold; }
+        .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0 2rem; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem 1rem; text-align: center; }
+        .stat-card .stat-num { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.8rem; color: var(--accent-color); }
+        .stat-card .stat-label { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem; }
+        @media (max-width: 560px) { .stat-row { grid-template-columns: 1fr; } }
+        .diagram-wrap { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0; }
+        .diagram-wrap svg { display: block; width: 100%; height: auto; }
+        .diagram-caption { color: var(--text-muted); font-size: 0.85rem; text-align: center; margin-top: 0.75rem; }
+        ul.highlights { color: var(--text-color); padding-left: 1.25rem; }
+        ul.highlights li { margin-bottom: 0.6rem; }
+        footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <a class="back-link" href="index.html">&larr; Назад к портфолио</a>
+            <a class="back-link" href="../river-logic.html">EN</a>
+        </div>
+        <h1>Модернизация платформы RiverLogic VCO</h1>
+        <p class="subtitle">RiverLogic Inc. &mdash; Senior Developer / AI Architect &middot; Март 2014 &ndash; по настоящее время</p>
+
+        <ul class="tags">
+            <li>C# / .NET 8</li>
+            <li>Azure AKS и Container Apps</li>
+            <li>Событийно-ориентированная архитектура</li>
+            <li>RAG</li>
+            <li>MS Semantic Kernel</li>
+            <li>LoRA Fine-Tuning</li>
+        </ul>
+
+        <p>RiverLogic разрабатывает ПО для Value Chain Optimization (VCO) &mdash; крупномасштабные модели
+            линейного программирования, которые помогают корпоративным клиентам планировать производство,
+            логистику и цепочки поставок. Уже больше десяти лет я как инженер веду архитектурное развитие этой
+            платформы: от двухзвенного on-premise монолита &mdash; к событийно-ориентированной платформе
+            микросервисов на Azure, а в последнее время &mdash; к инструментам корпоративного ИИ поверх неё.</p>
+
+        <div class="stat-row">
+            <div class="stat-card"><div class="stat-num">30%</div><div class="stat-label">меньше обращений в саппорт после миграции BLL</div></div>
+            <div class="stat-card"><div class="stat-num">15%</div><div class="stat-label">ниже потребление ресурсов после перехода на .NET 8</div></div>
+            <div class="stat-card"><div class="stat-num">10+</div><div class="stat-label">лет архитектурного развития платформы</div></div>
+        </div>
+
+        <h2>Архитектурная эволюция</h2>
+        <p>Платформа начиналась как 2-звенная система с бизнес-логикой в хранимых процедурах MSSQL T-SQL
+            &mdash; сложно тестировать, рискованно менять. Я руководил переносом слоя бизнес-логики (BLL) на
+            сервер приложений .NET C#, перестроив систему в полноценную 3-звенную архитектуру без простоя при
+            переключении. Помимо снижения обращений в саппорт на 30%, это заметно повысило безопасность и
+            стабильность системы и добавило совместимость с PostgreSQL наряду с существующей поддержкой MSSQL
+            &mdash; открыв путь к cloud-native развёртыванию.</p>
+
+        <h2>От Windows к Linux, от .NET Framework к .NET 8</h2>
+        <p>Когда бизнес-логика переехала на C#, следующим шагом стала переносимость в облако: миграция кодовой
+            базы с .NET Framework на .NET 8 для полной кроссплатформенности (Linux) и повсеместное внедрение
+            async/await. Это снизило потребление ресурсов примерно на 15% и убрало последнюю зависимость сервера
+            приложений от Windows.</p>
+
+        <h2>Событийно-ориентированные микросервисы на Azure</h2>
+        <p>On-premise монолит был декомпозирован на высоконагруженные микросервисы на Azure Kubernetes Service и
+            Container Apps. Сервисы взаимодействуют через REST для синхронных вызовов и через Azure Event Grid /
+            Queues &mdash; для асинхронного месседжинга, а Saga, CQRS и паттерн Outbox поддерживают консистентность
+            данных между сервисами, которые больше не разделяют одну транзакцию БД. Реализация нативна для Azure,
+            но сам паттерн &mdash; событийно-ориентированный, с асинхронным месседжингом и eventual consistency
+            &mdash; напрямую переносится на эквивалентные serverless-примитивы других облаков (включая AWS Lambda,
+            EventBridge, SQS/SNS).</p>
+
+        <div class="diagram-wrap">
+            <svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                        <path d="M0,0 L10,5 L0,10 z" fill="var(--text-muted)"/>
+                    </marker>
+                </defs>
+                <style>
+                    .box { fill: var(--bg-color); stroke: var(--border-color); stroke-width: 1.5; rx: 10; }
+                    .box-accent { stroke: var(--accent-color); }
+                    .lbl { font-family: 'Inter', sans-serif; font-size: 16px; fill: var(--text-color); text-anchor: middle; }
+                    .lbl-sub { font-family: 'Inter', sans-serif; font-size: 12px; fill: var(--text-muted); text-anchor: middle; }
+                    .flow-line { stroke: var(--text-muted); stroke-width: 2; fill: none; marker-end: url(#arrow); }
+                </style>
+
+                <rect class="box box-accent" x="120" y="10" width="400" height="70"/>
+                <text class="lbl" x="320" y="40">Клиент и ИИ-ассистент RIA</text>
+                <text class="lbl-sub" x="320" y="60">Web UI / вызовы плагина Semantic Kernel</text>
+
+                <path class="flow-line" d="M320,80 L320,115"/>
+
+                <rect class="box" x="100" y="120" width="440" height="70"/>
+                <text class="lbl" x="320" y="150">ASP.NET 8 REST HATEOAS API Gateway</text>
+                <text class="lbl-sub" x="320" y="170">OpenAPI-совместимый, версионируемый контракт</text>
+
+                <path class="flow-line" d="M320,190 L320,225"/>
+
+                <rect class="box box-accent" x="60" y="230" width="520" height="80"/>
+                <text class="lbl" x="320" y="262">Микросервисы на AKS / Container Apps</text>
+                <text class="lbl-sub" x="320" y="284">BLL &middot; AI / RAG &middot; другие доменные сервисы</text>
+
+                <path class="flow-line" d="M320,310 L320,345"/>
+
+                <rect class="box" x="80" y="350" width="480" height="80"/>
+                <text class="lbl" x="320" y="382">Azure Event Grid / Queues &mdash; EDA</text>
+                <text class="lbl-sub" x="320" y="404">Асинхронный месседжинг &middot; Saga &middot; CQRS &middot; Outbox</text>
+
+                <path class="flow-line" d="M320,430 L320,465"/>
+
+                <rect class="box" x="80" y="470" width="480" height="70"/>
+                <text class="lbl" x="320" y="500">PostgreSQL + MSSQL + noSQL Azure Tables</text>
+                <text class="lbl-sub" x="320" y="520">Хранилища данных для каждого сервиса</text>
+
+                <path class="flow-line" d="M320,540 L320,575"/>
+
+                <rect class="box" x="120" y="580" width="400" height="55" stroke-dasharray="5,4"/>
+                <text class="lbl-sub" x="320" y="605">Миграция с: 2-звенного on-prem монолита,</text>
+                <text class="lbl-sub" x="320" y="622">бизнес-логика в хранимых процедурах MSSQL T-SQL</text>
+            </svg>
+            <p class="diagram-caption">Текущая архитектура платформы, сверху вниз &mdash; и то, что она заменила, внизу.</p>
+        </div>
+
+        <h2>Интеграция корпоративного ИИ</h2>
+        <p>Позже эта архитектура стала основой для ИИ-ассистента RiverLogic &mdash; <strong>RIA</strong>. Вместе
+            с командой я реализовал retrieval-augmented generation (RAG) с векторным поиском по эмбеддингам и
+            предоставил основной функционал VCO ассистенту RIA через OpenAPI-совместимый REST HATEOAS API,
+            обёрнутый в плагин Microsoft Semantic Kernel &mdash; это позволяет ассистенту вызывать реальные
+            возможности платформы, а не просто рассказывать о них. В части моделирования вместе с командой провёл
+            R&amp;D по дообучению LLM через LoRA (Python, PyTorch, Transformers) для адаптации open-source
+            моделей под специализированные корпоративные задачи, а также отдельно спроектировал прототип
+            графовой нейросети для предварительной оценки разрешимости LP-задач &mdash; подробнее в
+            <a href="gcnn-poc.html" style="color: var(--accent-color);">описании GCNN-прототипа</a>.</p>
+
+        <h2>Инженерная культура</h2>
+        <p>Архитектурные решения работают только тогда, когда команда может безопасно на них строить. Я
+            практиковал DDD, SOLID и паттерны GoF, выстроил полные наборы юнит- и интеграционных тестов (xUnit,
+            NSubstitute) по TDD, чтобы релизы оставались без простоя по мере роста распределённости системы.
+            Также внедрил в команде agentic AI-воркфлоу на основе Claude Code, сократив рутинное написание кода
+            и повысив общую скорость разработки, и веду пайплайны сборки/деплоя команды через Azure DevOps.</p>
+
+        <p class="highlight-note">Основной production-код здесь защищён строгими корпоративными NDA и является
+            собственностью компании, поэтому не выложен публично на GitHub &mdash; готов подробно разобрать
+            архитектуру или конкретные решения по запросу.</p>
+        <p class="highlight-note">Также по запросу могу предоставить письменную рекомендацию от RiverLogic.</p>
+
+        <footer>
+            <a class="back-link" href="index.html">&larr; Назад к портфолио</a>
+        </footer>
+    </div>
+</body>
+</html>
