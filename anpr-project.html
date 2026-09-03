@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANPR / LPR Pipeline | Roman Girin</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --card-bg: #1e293b;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .container { max-width: 800px; width: 100%; }
+        .back-link { color: var(--accent-color); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        h1 { margin: 1.5rem 0 0.25rem; font-size: 2rem; }
+        .subtitle { color: var(--text-muted); margin-bottom: 2rem; }
+        h2 { border-bottom: 1px solid #334155; padding-bottom: 0.5rem; margin-top: 2.5rem; }
+        p { color: var(--text-color); }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 1.5rem 0; }
+        .tags li { background: #334155; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; }
+        .highlight-note { color: var(--accent-color); font-weight: bold; }
+        .project-figure { background: #fff; border-radius: 8px; padding: 0.75rem; margin: 1.5rem 0; }
+        .project-figure img { display: block; width: 100%; border-radius: 4px; }
+        .project-figure figcaption { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem; text-align: center; }
+        ul.highlights { color: var(--text-color); padding-left: 1.25rem; }
+        ul.highlights li { margin-bottom: 0.6rem; }
+        footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #334155; color: var(--text-muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back-link" href="index.html">&larr; Back to portfolio</a>
+        <h1>ANPR / License-Plate Recognition Pipeline</h1>
+        <p class="subtitle">OOO "EcoSmart" &mdash; vehicle access-control system</p>
+
+        <ul class="tags">
+            <li>PyTorch</li>
+            <li>MTCNN</li>
+            <li>OpenCV</li>
+            <li>MLFlow</li>
+            <li>DVC</li>
+        </ul>
+
+        <p>A license-plate-recognition vehicle access-control system built for a real site: cameras feed a
+            custom neural-network pipeline that detects and reads plates, checks them against a daily whitelist,
+            optionally triggers a barrier relay, and reports every detection to a backend with a web front end
+            for operators.</p>
+
+        <h2>Overview</h2>
+        <p>The system automates vehicle access control at the site's gate. Cameras watch the entrance; a custom
+            deep-learning pipeline (MTCNN for plate detection, an STN + recognizer net for reading it) picks the
+            license plate out of each frame and reads it directly off the live feed &mdash; no manual lookup.
+            Every read is checked against a daily list of expected vehicles logistics has scheduled for loading
+            or unloading; a match can open the barrier automatically, and every detection &mdash; matched or not
+            &mdash; is logged for operators to review.</p>
+
+        <figure class="project-figure">
+            <img src="assets/anpr/detected-vehicle.png" alt="A truck's plate detected and read live off the camera feed">
+            <figcaption>A detected vehicle: the plate is located and read directly off the camera frame, alongside the recognition confidence.</figcaption>
+        </figure>
+
+        <figure class="project-figure">
+            <img src="assets/anpr/detections-log.png" alt="The detections log listing every plate read, with date/time, filtering, and a language switcher">
+            <figcaption>The detections log: every read, filterable, with a view/delete action per row for operator review. The UI also supports switching languages.</figcaption>
+        </figure>
+
+        <figure class="project-figure">
+            <img src="assets/anpr/expected-vehicles.png" alt="The expected-vehicles schedule operators use to register incoming trucks">
+            <figcaption>The expected-vehicles list operators use to schedule incoming trucks; arrivals are checked against it automatically, and the ones marked as arrived are highlighted.</figcaption>
+        </figure>
+
+        <h2>Highlights</h2>
+        <ul class="highlights">
+            <li><strong>ANPR system design.</strong> Designed and built the vehicle automatic number-plate recognition (ANPR) system end to end, on custom deep networks (MTCNN, STR-Net).</li>
+            <li><strong>MTCNN pipeline optimization.</strong> Ran an in-depth analysis of MTCNN and restructured the detection pipeline down to P-Net and O-Net only, dropping R-Net entirely &mdash; cutting GPU load with no loss in accuracy.</li>
+            <li><strong>Dataset &amp; experiment tooling.</strong> Customized LabelImg for the company's metadata format, led the annotation team, and built the dataset validation pipeline; set up on-prem data/experiment versioning (MLFlow, DVC).</li>
+            <li><strong>Business impact.</strong> Automatic recognition of expected truck convoys approaching the site, wired into the logistics notification system, eliminated vehicle downtime and sped up unloading.</li>
+        </ul>
+
+        <p>In production, this automatic recognition of expected vehicles &mdash; tied into the logistics
+            notification system &mdash; eliminated vehicle downtime at the gate and sped up unloading, by
+            removing the manual step of checking each truck against the day's schedule.</p>
+
+        <p class="highlight-note">(private repository &mdash; happy to share access or a demo on request)</p>
+
+        <footer>
+            <a class="back-link" href="index.html">&larr; Back to portfolio</a>
+        </footer>
+    </div>
+</body>
+</html>

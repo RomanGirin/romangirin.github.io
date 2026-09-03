@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCNN LP-Feasibility POC | Roman Girin</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --card-bg: #1e293b;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .container { max-width: 800px; width: 100%; }
+        .back-link { color: var(--accent-color); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        h1 { margin: 1.5rem 0 0.25rem; font-size: 2rem; }
+        .subtitle { color: var(--text-muted); margin-bottom: 2rem; }
+        h2 { border-bottom: 1px solid #334155; padding-bottom: 0.5rem; margin-top: 2.5rem; }
+        p { color: var(--text-color); }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 1.5rem 0; }
+        .tags li { background: #334155; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; }
+        .project-figure { background: #fff; border-radius: 8px; padding: 0.75rem; margin: 1.5rem 0; }
+        .project-figure img { display: block; width: 100%; border-radius: 4px; }
+        .project-figure figcaption { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem; text-align: center; }
+        .figure-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 640px) { .figure-row { grid-template-columns: 1fr; } }
+        code { background: #334155; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+        pre { background: #0b1220; border: 1px solid #334155; border-radius: 8px; padding: 1rem; overflow-x: auto; }
+        pre code { background: none; padding: 0; }
+        .model-repr { color: var(--text-muted); }
+        ul.refs { color: var(--text-muted); padding-left: 1.25rem; }
+        ul.refs a { color: var(--accent-color); }
+        footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #334155; color: var(--text-muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back-link" href="index.html">&larr; Back to portfolio</a>
+        <h1>Graph Neural Net for LP Feasibility Pre-Screening</h1>
+        <p class="subtitle">R&amp;D proof-of-concept &mdash; RiverLogic Value Chain Optimization (VCO) software</p>
+
+        <ul class="tags">
+            <li>PyTorch Geometric</li>
+            <li>GCNN</li>
+            <li>Graph ML</li>
+            <li>t-SNE</li>
+            <li>SciPy</li>
+        </ul>
+
+        <p>Solving a linear programming (LP) problem to determine it's infeasible can itself be expensive.
+            This proof-of-concept explores whether a small graph neural network can pre-screen an LP problem's
+            feasibility cheaply, before committing to a full solve &mdash; a lightweight gate in front of
+            RiverLogic's VCO solver pipeline.</p>
+
+        <h2>Hypothesis</h2>
+        <p>We proposed estimating LP feasibility using a graph convolutional neural network (GCNN).
+            Representing an LP problem as a bipartite graph is a scientifically grounded approach
+            (<a href="https://arxiv.org/abs/2012.13349" target="_blank" style="color: var(--accent-color);">arXiv:2012.13349</a>,
+            <a href="https://arxiv.org/abs/2302.05636" target="_blank" style="color: var(--accent-color);">arXiv:2302.05636</a>),
+            and using that graph representation to make general approximate estimations about the problem is
+            likewise supported by recent literature
+            (<a href="https://proceedings.mlr.press/v238/qian24a/qian24a.pdf" target="_blank" style="color: var(--accent-color);">Qian et al., 2024</a>).
+            The conversion from matrix representation to bipartite graph (and back) is straightforward, and
+            production-ready GCNN implementations already exist in
+            <a href="https://pytorch-geometric.readthedocs.io" target="_blank" style="color: var(--accent-color);">PyTorch Geometric</a>.</p>
+
+        <h2>Data</h2>
+        <p>No dataset of customer models was available for this demo, so synthetic ones were generated instead:
+            ~5,000 LP problems for the training set and ~2,000 for the test set, keeping a 50/50 split between
+            feasible and infeasible instances. Since this was supervised learning, ground-truth
+            feasible/infeasible labels were produced by actually solving each generated problem with SciPy's
+            <code>linprog()</code>. Production use would call for a representative dataset of real customer
+            models and a production-grade LP solver.</p>
+
+        <h2>Results</h2>
+        <p>Even in this first, crude pass, the trained model reached <strong>~92% accuracy</strong> &mdash;
+            with room to improve given more time for research and experimentation. More telling than the
+            accuracy number alone: projecting the model's learned embeddings with t-SNE shows feasible and
+            infeasible LP instances separating into distinct clusters, which is clear evidence the GCNN can
+            actually tell feasible from infeasible LPs rather than just fitting the synthetic labels (some
+            outliers remain and would need further investigation). Pre-solve feasibility estimation via a GCNN
+            this small turned out to be a solvable task.</p>
+
+        <div class="figure-row">
+            <figure class="project-figure">
+                <img src="assets/gcnn-tsne-2d.png" alt="2D t-SNE projection of GCNN LP-problem embeddings, showing feasible and infeasible instances separating into distinct clusters">
+                <figcaption>2D t-SNE projection of the GCNN's learned embeddings.</figcaption>
+            </figure>
+            <figure class="project-figure">
+                <img src="assets/gcnn-tsne-3d.png" alt="3D t-SNE projection of GCNN LP-problem embeddings">
+                <figcaption>3D t-SNE projection of the same embeddings.</figcaption>
+            </figure>
+        </div>
+
+        <h2>Model</h2>
+        <p>The experimental model structure, for reference (further research/tuning would follow in a
+            production track):</p>
+        <pre><code>import torch
+from torch.nn import Linear
+import torch.nn.functional as F
+from torch_geometric.nn import GCNConv
+from torch_geometric.nn import global_mean_pool, global_add_pool
+
+
+class GCN(torch.nn.Module):
+    def __init__(self, num_node_features, hidden_channels, num_classes):
+        super(GCN, self).__init__()
+        self.conv1 = GCNConv(num_node_features, hidden_channels)
+        self.conv2 = GCNConv(hidden_channels, hidden_channels)
+        self.conv3 = GCNConv(hidden_channels, hidden_channels)
+        self.conv4 = GCNConv(hidden_channels, hidden_channels)
+        self.lin = Linear(hidden_channels, num_classes)
+
+    def forward(self, x, edge_index, edge_weight, batch):
+        # 1. Obtain node embeddings
+        x = self.conv1(x, edge_index, edge_weight)
+        x = x.relu()
+        x = self.conv2(x, edge_index, edge_weight)
+        x = x.relu()
+        x = self.conv3(x, edge_index, edge_weight)
+        x = x.relu()
+        x = self.conv4(x, edge_index, edge_weight)
+        x = x.relu()
+        # 2. Readout layer
+        x = global_mean_pool(x, batch)  # [batch_size, hidden_channels]
+        # 3. Apply a final classifier
+        x = F.dropout(x, p=0.5, training=self.training)
+        x = self.lin(x)
+        return x</code></pre>
+
+        <p>Or the model's own <code>print()</code> representation, whichever is more readable &mdash; note how
+            small it is for the result it delivers:</p>
+        <pre class="model-repr"><code>GCN(
+  (conv1): GCNConv(4, 16)
+  (conv2): GCNConv(16, 16)
+  (conv3): GCNConv(16, 16)
+  (conv4): GCNConv(16, 16)
+  (lin): Linear(in_features=16, out_features=2, bias=True)
+)</code></pre>
+
+        <h2>References</h2>
+        <ul class="refs">
+            <li><a href="https://arxiv.org/abs/2012.13349" target="_blank">Combinatorial optimization and reasoning with graph neural networks &mdash; arXiv:2012.13349</a></li>
+            <li><a href="https://arxiv.org/abs/2302.05636" target="_blank">arXiv:2302.05636</a></li>
+            <li><a href="https://proceedings.mlr.press/v238/qian24a/qian24a.pdf" target="_blank">Qian et al., 2024 (PMLR v238)</a></li>
+            <li><a href="https://pytorch-geometric.readthedocs.io" target="_blank">PyTorch Geometric documentation</a></li>
+            <li><a href="https://docs.scipy.org/doc/scipy/tutorial/optimize.html" target="_blank">SciPy <code>optimize.linprog</code> documentation</a></li>
+        </ul>
+
+        <footer>
+            Proprietary R&amp;D done for RiverLogic Inc. &mdash; shared here as a technical write-up, not
+            production code. Happy to walk through the full implementation on request.
+            <br><br>
+            <a class="back-link" href="index.html">&larr; Back to portfolio</a>
+        </footer>
+    </div>
+</body>
+</html>

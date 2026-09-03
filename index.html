@@ -53,6 +53,10 @@
         .edu-item { margin-bottom: 1rem; }
         .edu-item h3 { margin: 0 0 0.15rem; }
         .edu-item .job-dates { display: block; margin-bottom: 0.35rem; }
+        .project-figure { background: #fff; border-radius: 8px; padding: 0.75rem; margin: 1rem 0; }
+        .project-figure img { display: block; width: 100%; border-radius: 4px; }
+        .project-figure figcaption { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.5rem; text-align: center; }
+        .highlight-note { color: var(--accent-color); font-weight: bold; margin: 0; }
     </style>
 </head>
 <body>
@@ -110,7 +114,10 @@
                         <li>MLFlow</li>
                         <li>DVC</li>
                     </ul>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">(private repository &mdash; happy to share access or a demo on request)</p>
+                    <p class="highlight-note">(private repository &mdash; happy to share access or a demo on request)</p>
+                    <div class="project-links" style="margin-top: 1rem;">
+                        <a href="anpr-project.html">Details &rarr;</a>
+                    </div>
                 </div>
                 <div class="project-card">
                     <h3>Cleaning-Equipment Detection System</h3>
@@ -128,8 +135,7 @@
                 </div>
                 <div class="project-card">
                     <h3>Graph Neural Net for LP Feasibility Pre-Screening</h3>
-                    <p><!-- placeholder description, Roman to replace with his own write-up -->
-                        R&amp;D proof-of-concept applying Graph Convolutional Neural Networks to mathematical
+                    <p>R&amp;D proof-of-concept applying Graph Convolutional Neural Networks to mathematical
                         optimization: mapped the matrix representation of linear programming (LP) problems into
                         bipartite graphs and trained a lightweight GCNN, built with PyTorch Geometric, to
                         pre-screen LP-problem feasibility before handing a solve off to the full solver &mdash;
@@ -139,6 +145,9 @@
                         <li>GCNN</li>
                         <li>Graph ML</li>
                     </ul>
+                    <div class="project-links">
+                        <a href="gcnn-poc.html">Details &rarr;</a>
+                    </div>
                 </div>
             </div>
         </section>
