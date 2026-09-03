@@ -102,8 +102,9 @@
             <a href="https://pytorch-geometric.readthedocs.io" target="_blank" style="color: var(--accent-color);">PyTorch Geometric</a>.</p>
 
         <h2>Data</h2>
-        <p>No dataset of customer models was available for this demo, so synthetic ones were generated instead:
-            ~5,000 LP problems for the training set and ~2,000 for the test set, keeping a 50/50 split between
+        <p>For this demo, we deliberately avoided using a dataset of real customer models &mdash; sidestepping
+            the data-usage approvals that would require &mdash; and generated synthetic ones instead: ~5,000 LP
+            problems for the training set and ~2,000 for the test set, keeping a 50/50 split between
             feasible and infeasible instances. Since this was supervised learning, ground-truth
             feasible/infeasible labels were produced by actually solving each generated problem with SciPy's
             <code>linprog()</code>. Production use would call for a representative dataset of real customer

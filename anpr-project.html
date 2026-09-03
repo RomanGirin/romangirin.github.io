@@ -78,9 +78,10 @@
         </ul>
 
         <p>A license-plate-recognition vehicle access-control system built for a real site: cameras feed a
-            custom neural-network pipeline that detects and reads plates, checks them against a daily whitelist,
-            optionally triggers a barrier relay, and reports every detection to a backend with a web front end
-            for operators.</p>
+            custom neural-network pipeline that detects and reads plates, checks them against a daily
+            whitelist/expected-arrivals list, optionally triggers a barrier relay, reports every detection to a
+            backend with a web front end for operators, and notifies the logistics team (email and/or SMS) that a
+            vehicle has arrived for unloading.</p>
 
         <h2>Overview</h2>
         <p>The system automates vehicle access control at the site's gate. Cameras watch the entrance; a custom
