@@ -110,7 +110,10 @@
         <p>The on-premise monolith was decomposed into high-load microservices running on Azure Kubernetes
             Service and Container Apps. Services talk to each other over REST for synchronous calls and Azure
             Event Grid / Queues for asynchronous messaging, with Saga, CQRS, and the Outbox pattern keeping data
-            consistent across services that no longer share a single database transaction.</p>
+            consistent across services that no longer share a single database transaction. The implementation is
+            Azure-native, but the underlying pattern &mdash; event-driven, asynchronously messaged, eventually
+            consistent &mdash; maps directly onto the equivalent serverless primitives on other clouds (AWS
+            Lambda, EventBridge, SQS/SNS included).</p>
 
         <div class="diagram-wrap">
             <svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg">
