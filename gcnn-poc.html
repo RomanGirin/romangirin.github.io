@@ -40,6 +40,8 @@
         pre { background: #0b1220; border: 1px solid #334155; border-radius: 8px; padding: 1rem; overflow-x: auto; }
         pre code { background: none; padding: 0; }
         .model-repr { color: var(--text-muted); }
+        .highlight-note { color: var(--accent-color); font-weight: bold; }
+        .result-highlight { color: var(--text-color); font-weight: bold; }
         ul.refs { color: var(--text-muted); padding-left: 1.25rem; }
         ul.refs a { color: var(--accent-color); }
         footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #334155; color: var(--text-muted); font-size: 0.9rem; }
@@ -92,6 +94,11 @@
             actually tell feasible from infeasible LPs rather than just fitting the synthetic labels (some
             outliers remain and would need further investigation). Pre-solve feasibility estimation via a GCNN
             this small turned out to be a solvable task.</p>
+        <p class="result-highlight">In our experience, a full solve of VCO (Value Chain Optimization) models
+            through production LP solvers can take several hours &mdash; the matrix representations these models
+            present to LP solvers are considerable. A pre-solve check this cheap could save customers
+            substantial time and compute by flagging an infeasible or crudely broken model upfront, before
+            committing to a full solve.</p>
 
         <div class="figure-row">
             <figure class="project-figure">
