@@ -42,53 +42,218 @@
         .project-links a { color: var(--accent-color); text-decoration: none; margin-right: 1rem; font-weight: bold; }
         .project-links a:hover { text-decoration: underline; }
         .contact-links a { color: var(--text-color); margin-right: 1.5rem; font-size: 1.1rem; }
+        .job { margin-bottom: 2rem; }
+        .job-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+        .job-header h3 { margin: 0; }
+        .job-role { color: var(--text-muted); font-style: italic; margin: 0.15rem 0 0.5rem; }
+        .job-dates { color: var(--text-muted); font-size: 0.9rem; white-space: nowrap; }
+        .job ul { margin: 0; padding-left: 1.25rem; color: var(--text-muted); }
+        .job li { margin-bottom: 0.4rem; }
+        .job li strong { color: var(--text-color); }
+        .edu-item { margin-bottom: 1rem; }
+        .edu-item h3 { margin: 0 0 0.15rem; }
+        .edu-item .job-dates { display: block; margin-bottom: 0.35rem; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Roman Girin</h1>
-            <div class="subtitle">Software Developer</div>
-            <p class="bio">I build clean, scalable, and efficient software solutions. Welcome to my digital space.</p>
+            <div class="subtitle">Senior Software / AI Engineer</div>
+            <p class="bio">20+ years building high-load systems and modernizing enterprise architecture, with a
+                growing focus on AI integration &mdash; LLMs, CNNs, and applied ML. PhD in Neural Networks paired
+                with a long track record of shipping commercial software.</p>
         </header>
 
         <section id="stack">
             <h2>Tech Stack</h2>
             <ul class="tags">
-                <li>JavaScript</li>
-                <li>TypeScript</li>
-                <li>Node.js</li>
-                <li>React</li>
-                <li>Git</li>
-                <!-- Add your actual stack here -->
+                <li>C#</li>
+                <li>Python</li>
+                <li>C++</li>
+                <li>SQL / T-SQL</li>
+                <li>.NET 8 / Core / Framework</li>
+                <li>ASP.NET</li>
+                <li>Django / Django REST</li>
+                <li>PyTorch</li>
+                <li>OpenCV</li>
+                <li>TorchVision</li>
+                <li>Transformers</li>
+                <li>RAG / pgvector</li>
+                <li>LoRA Fine-Tuning</li>
+                <li>MS Semantic Kernel</li>
+                <li>NumPy / Pandas / Scikit-Learn</li>
+                <li>Docker</li>
+                <li>Azure (AKS, Container Apps, Event Grid)</li>
+                <li>Kafka / RabbitMQ</li>
+                <li>Azure DevOps (CI/CD)</li>
+                <li>Claude Code</li>
             </ul>
         </section>
 
         <section id="projects">
             <h2>Featured Projects</h2>
             <div class="project-grid">
-                <!-- Project 1 -->
                 <div class="project-card">
-                    <h3>Project Name</h3>
-                    <p>A short, punchy description of what this app does and the problem it solves for the user.</p>
+                    <h3>ANPR / License-Plate Recognition Pipeline</h3>
+                    <p>Designed and built a production ANPR system on custom deep networks (MTCNN plate
+                        detector + a custom recognizer net). Re-architected the MTCNN detection pipeline down to
+                        P-Net + O-Net only, dropping R-Net entirely to cut GPU load with no loss of accuracy.
+                        Built the supporting data pipeline &mdash; a customized LabelImg workflow, a managed
+                        annotation team, and dataset-validation, MLFlow/DVC experiment and data versioning.
+                        Auto-recognizing expected trucks at site entrances and pushing alerts into the logistics
+                        system eliminated vehicle downtime and sped up unloading.</p>
                     <ul class="tags" style="margin-bottom: 1rem;">
-                        <li>React</li>
-                        <li>Node.js</li>
+                        <li>PyTorch</li>
+                        <li>MTCNN</li>
+                        <li>OpenCV</li>
+                        <li>MLFlow</li>
+                        <li>DVC</li>
                     </ul>
                     <div class="project-links">
-                        <a href="#" target="_blank">Live Demo →</a>
-                        <a href="#" target="_blank">GitHub Repo</a>
+                        <a href="https://github.com/RomanGirin/ecosmart" target="_blank">GitHub Repo</a>
                     </div>
                 </div>
+                <div class="project-card">
+                    <h3>Cleaning-Equipment Detection System</h3>
+                    <p>Trained an SSD (Single Shot MultiBox Detector) object-detection model to recognize
+                        cleaning equipment in live video, with an automated image collection/filtering pipeline
+                        tuned for non-standard, changing indoor lighting. Deployed at a "Lastochka" train
+                        servicing depot, where it eliminated cleaning-schedule violations and the regulatory
+                        fines that came with them.</p>
+                    <ul class="tags" style="margin-bottom: 1rem;">
+                        <li>PyTorch</li>
+                        <li>TorchVision</li>
+                        <li>SSD</li>
+                        <li>OpenCV</li>
+                    </ul>
+                </div>
+                <div class="project-card">
+                    <h3>Graph Neural Net for LP Feasibility Pre-Screening</h3>
+                    <p><!-- placeholder description, Roman to replace with his own write-up -->
+                        R&amp;D proof-of-concept applying Graph Convolutional Neural Networks to mathematical
+                        optimization: mapped the matrix representation of linear programming (LP) problems into
+                        bipartite graphs and trained a lightweight GCNN, built with PyTorch Geometric, to
+                        pre-screen LP-problem feasibility before handing a solve off to the full solver &mdash;
+                        reaching 92% accuracy.</p>
+                    <ul class="tags" style="margin-bottom: 1rem;">
+                        <li>PyTorch Geometric</li>
+                        <li>GCNN</li>
+                        <li>Graph ML</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience">
+            <h2>Professional Experience</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: -0.5rem;">My core production
+                codebase from enterprise work at RiverLogic and various banking environments is protected by
+                strict corporate NDAs and proprietary business logic. Because of this, my day-to-day coding
+                activity &mdash; primarily managed on Azure DevOps &mdash; isn't publicly visible on GitHub.</p>
+
+            <div class="job">
+                <div class="job-header">
+                    <h3>RiverLogic Inc. &mdash; Seattle, USA (Remote)</h3>
+                    <span class="job-dates">March 2014 &ndash; Present</span>
+                </div>
+                <p class="job-role">Senior Developer, Modelling Software &mdash; Value Chain Optimization (VCO)</p>
+                <ul>
+                    <li><strong>Architectural evolution:</strong> led modernization from legacy 2-tier to 3-tier architecture with zero downtime, migrating the business logic layer from T-SQL to a .NET C# application server &mdash; a 30% reduction in support ticket volume.</li>
+                    <li><strong>Windows to Linux migration:</strong> moved the core codebase from .NET Framework to .NET 8 for full cross-platform compatibility and async/await adoption, cutting resource consumption by 15%.</li>
+                    <li><strong>Cloud deployment:</strong> decomposed an on-premise monolith into high-load microservices across Azure Container Apps, Container Instances, AKS, and serverless Azure Functions, using EDA (Event Grid/Queues), Saga, CQRS, and the Outbox pattern for distributed consistency &mdash; architecture whose principles map directly onto AWS's equivalent serverless/event-driven primitives.</li>
+                    <li><strong>AI assistant development:</strong> built RAG and embedding vector search, and exposed core functionality through an OpenAPI-compliant ASP.NET 8 REST HATEOAS API as an MS Semantic Kernel plugin, delivering tooling for RiverLogic's AI assistant, RIA.</li>
+                    <li><strong>LLM fine-tuning:</strong> ran LoRA fine-tuning (Python, PyTorch, Transformers) to align open-source models for domain-specific enterprise workflows.</li>
+                    <li><strong>Quality assurance:</strong> practiced DDD/SOLID/TDD and maintained zero-downtime releases via comprehensive unit, integration, and end-to-end test suites (NUnit, xUnit, NSubstitute).</li>
+                    <li><strong>Team upskilling:</strong> introduced agentic AI workflows (Claude Code) across the engineering team, raising development velocity.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <h3>OOO "EcoSmart" &mdash; Samara, Russia</h3>
+                    <span class="job-dates">January 2020 &ndash; October 2022</span>
+                </div>
+                <p class="job-role">Senior Computer Vision Engineer (Part-Time)</p>
+                <ul>
+                    <li><strong>ANPR system:</strong> designed and built a license-plate recognition system on custom deep networks (MTCNN detector + a custom recognizer net).</li>
+                    <li><strong>Architecture optimization:</strong> deep-dived the MTCNN pipeline and rebuilt detection around P-Net + O-Net only, dropping R-Net entirely &mdash; lower GPU load with no accuracy loss.</li>
+                    <li><strong>Data management:</strong> customized LabelImg to the company's metadata format, led an annotation team, built a dataset-validation pipeline, and set up on-prem data/experiment versioning (MLFlow, DVC).</li>
+                    <li><strong>Business result:</strong> automatic recognition of expected trucks at site entrances integrated with the logistics system eliminated vehicle downtime and sped up unloading.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <h3>OOO "EcoSmart" &mdash; Samara, Russia</h3>
+                    <span class="job-dates">September 2019 &ndash; January 2020</span>
+                </div>
+                <p class="job-role">Senior Computer Vision Engineer (Part-Time)</p>
+                <ul>
+                    <li><strong>Detection system:</strong> developed and trained an SSD (Single Shot MultiBox Detector) model to recognize cleaning equipment in video streams.</li>
+                    <li><strong>Data engineering:</strong> set up automated collection, filtering, and preparation of images under non-standard, changing indoor lighting.</li>
+                    <li><strong>Business result:</strong> deployed at a "Lastochka" train servicing depot, eliminating cleaning-schedule violations and the regulatory fines that came with them.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <h3>Samara State Technical University &mdash; Samara, Russia</h3>
+                    <span class="job-dates">September 2017 &ndash; September 2019</span>
+                </div>
+                <p class="job-role">Machine Vision Researcher &amp; Developer (Part-Time, Research Fellowship)</p>
+                <ul>
+                    <li>Engineered a deep-CNN machine vision diagnostic system to automate detection of broken railway fasteners and bindings, using Python, PyTorch, OpenCV, TorchVision, and CUDA/cuDNN.</li>
+                    <li>Handled severe class imbalance via data augmentation and SMOTE (imbalanced-learn).</li>
+                    <li>Deployed the system to production for JSC RPC InfoTrans via a Django REST HATEOAS API and Kafka/RabbitMQ messaging &mdash; a 60% increase in registered railway defects detected.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <h3>VDcom &mdash; Samara, Russia</h3>
+                    <span class="job-dates">May 2010 &ndash; March 2014</span>
+                </div>
+                <p class="job-role">Senior Specialist (from Oct 2011) / Specialist</p>
+                <ul>
+                    <li>Outstaffed at Sberbank CIB, developing backend functionality on the Diasoft platform for the investment banking business.</li>
+                    <li>Designed and optimized complex stored procedures and ER-models for high-load transaction systems on Sybase ASE and MSSQL, including a financial-markets platform processing thousands of daily deals against core tables holding millions of records &mdash; dissecting query execution plans and reworking indexing strategies (with a close eye on B-tree index traversal) to keep heavy analytical JOINs running at sub-second response times.</li>
+                </ul>
+            </div>
+
+            <div class="job">
+                <div class="job-header">
+                    <h3>ACS &ndash; VolgaEVMcomplex &mdash; Samara, Russia</h3>
+                    <span class="job-dates">February 2006 &ndash; May 2010</span>
+                </div>
+                <p class="job-role">Project Manager / System Analyst</p>
+                <ul>
+                    <li>Authored technical specifications (SRS) to automate business processes on the DocsVision platform.</li>
+                    <li>Managed EDMS implementation projects and led a full-stack development team, contributing C# integration modules directly.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="education">
+            <h2>Education &amp; Research</h2>
+            <div class="edu-item">
+                <h3>PhD in Technical Sciences &mdash; Artificial Neural Networks</h3>
+                <span class="job-dates">Samara State Technical University, graduated 2019</span>
+                <p style="color: var(--text-muted); margin: 0;">Thesis: <a href="https://vak.gisnauka.ru/adverts-list/advert-card/117108" target="_blank" style="color: var(--accent-color);">"Intelligent informational measuring system for thermography-based diagnostic of technical objects based on artificial neural networks."</a> Research published on <a href="https://www.researchgate.net/profile/Roman-Girin/research" target="_blank" style="color: var(--accent-color);">ResearchGate</a>.</p>
+            </div>
+            <div class="edu-item">
+                <h3>Specialist Degree in Engineering</h3>
+                <span class="job-dates">Samara State Technical University, graduated 2002</span>
             </div>
         </section>
 
         <section id="contact">
             <h2>Connect</h2>
             <div class="contact-links">
-                <a href="mailto:your.email@example.com">Email</a>
-                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+                <a href="mailto:romangirin@gmail.com">Email</a>
+                <a href="https://www.linkedin.com/in/roman-girin-53422b1b/" target="_blank">LinkedIn</a>
                 <a href="https://github.com/RomanGirin" target="_blank">GitHub</a>
+                <a href="https://www.researchgate.net/profile/Roman-Girin/research" target="_blank">ResearchGate</a>
             </div>
         </section>
     </div>
