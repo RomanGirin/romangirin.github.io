@@ -153,6 +153,7 @@
         .project-figure img { display: block; width: 100%; border-radius: 4px; }
         .project-figure figcaption { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.5rem; text-align: center; }
         .highlight-note { color: var(--accent-color); font-weight: bold; margin: 0; }
+        .result-highlight { color: var(--text-color); font-weight: bold; margin: 0.75rem 0 0; }
         footer { color: var(--text-muted); font-size: 0.85rem; text-align: center; padding-top: 2rem; border-top: 1px solid var(--border-color); }
         @media (max-width: 560px) {
             body { padding-top: 8.5rem; }
@@ -285,7 +286,9 @@
                         bipartite graphs and trained a lightweight GCNN, built with PyTorch Geometric, to
                         pre-screen LP-problem feasibility before handing a solve off to the full solver &mdash;
                         reaching 92% accuracy.</p>
-                    <ul class="tags" style="margin-bottom: 1rem;">
+                    <p class="result-highlight">A full VCO solve can take hours &mdash; this cheap pre-solve
+                        check could save real time and compute.</p>
+                    <ul class="tags" style="margin-bottom: 1rem; margin-top: 1rem;">
                         <li>PyTorch Geometric</li>
                         <li>GCNN</li>
                         <li>Graph ML</li>
