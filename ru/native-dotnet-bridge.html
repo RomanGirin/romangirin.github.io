@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мост между нативным C++ и .NET 8 | Роман Гирин</title>
+    <meta name="description" content="Кейс-стади: хостинг CoreCLR внутри процесса из нативного C++ для связи нативных инструментов развёртывания с современной кодовой базой на C#, без C++/CLI и без выхода в отдельный процесс.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f172a'/%3E%3Ctext x='32' y='43' font-family='Arial,Helvetica,sans-serif' font-size='26' font-weight='700' fill='%2338bdf8' text-anchor='middle'%3ERG%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b1220;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --accent-2: #a78bfa;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(700px circle at 15% -5%, rgba(56, 189, 248, 0.12), transparent 60%),
+                radial-gradient(700px circle at 90% 10%, rgba(167, 139, 250, 0.10), transparent 55%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        h1, h2, .subtitle { font-family: 'Sora', 'Inter', system-ui, sans-serif; }
+        .container { max-width: 800px; width: 100%; }
+        .back-link { color: var(--accent-color); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        h1 { margin: 1.5rem 0 0.25rem; font-size: 2rem; font-weight: 700; }
+        .subtitle { color: var(--text-muted); margin-bottom: 2rem; }
+        h2 {
+            display: flex; align-items: center; gap: 0.6rem;
+            border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 2.5rem;
+        }
+        h2::before {
+            content: ''; width: 9px; height: 9px; border-radius: 3px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
+            display: inline-block; flex-shrink: 0;
+        }
+        p { color: var(--text-color); }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 1.5rem 0; }
+        .tags li { background: #334155; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; }
+        .highlight-note { color: var(--accent-color); font-weight: bold; }
+        code { background: #334155; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+        pre { background: #0b1220; border: 1px solid #334155; border-radius: 8px; padding: 1rem; overflow-x: auto; }
+        pre code { background: none; padding: 0; }
+        .file-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.5rem; }
+        ul.highlights { color: var(--text-color); padding-left: 1.25rem; }
+        ul.highlights li { margin-bottom: 0.6rem; }
+        footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <a class="back-link" href="index.html">&larr; Назад к портфолио</a>
+            <a class="back-link" href="../native-dotnet-bridge.html">EN</a>
+        </div>
+        <h1>Мост между нативным C++ и .NET 8</h1>
+        <p class="subtitle">RiverLogic Inc. &mdash; инструменты развёртывания и провижининга</p>
+
+        <ul class="tags">
+            <li>C++</li>
+            <li>.NET 8</li>
+            <li>CoreCLR Hosting</li>
+            <li>Native Interop</li>
+            <li>Windows ABI</li>
+        </ul>
+
+        <p>Часть инструментов развёртывания и провижининга RiverLogic для on-premise: некоторым нативным,
+            унаследованным компонентам требовалось выполнять логику &mdash; проверку предустановленных требований
+            SQL Server, патчинг connection string и конфигурационных файлов, управление Windows-службами,
+            проверку учётных данных &mdash; которую было бы гораздо более трудоёмко и рискованно переписывать на
+            C++, чем оставить в существующей, хорошо протестированной кодовой базе на C#. Вместо переноса этой
+            логики на нативный код я реализовал тонкий нативный мост, который хостит рантайм CoreCLR прямо внутри
+            процесса и вызывает C#-реализацию напрямую.</p>
+
+        <h2>Как это работает</h2>
+        <p>Нативный компонент линкуется с <code>nethost</code> и использует официальный hosting API .NET
+            (<code>hostfxr.h</code>, <code>coreclr_delegates.h</code>) &mdash; тот же низкоуровневый механизм,
+            которым сам .NET пользуется для собственной загрузки &mdash; чтобы найти и инициализировать рантайм
+            CoreCLR под конкретный <code>.runtimeconfig.json</code>. Затем он получает «сырой» указатель на
+            функцию, соответствующую статическому C#-методу с сигнатурой заданного unmanaged-совместимого
+            делегата, и вызывает его напрямую. Никакого COM, никакого выхода в отдельный процесс через RPC,
+            никакой смешанной компиляции C++/CLI &mdash; только hosting API, который документирует и поставляет
+            Microsoft, применённый для связи с уже существующей managed-кодовой базой из нативного компонента,
+            который не может просто стать managed.</p>
+
+        <h2>Загрузка рантайма</h2>
+        <p>Перед тем как managed-код сможет выполниться, происходят два шага. Сначала <code>nethost</code>
+            находит <code>hostfxr</code> &mdash; компонент, который умеет выбрать нужный установленный рантайм
+            .NET &mdash; и его три экспортируемые функции загружаются вручную через <code>GetProcAddress</code>.
+            Затем этот дескриптор <code>hostfxr</code> используется для инициализации рантайма под конкретный
+            <code>.runtimeconfig.json</code> и возврата единственного по-настоящему важного типа делегата:
+            <code>load_assembly_and_get_function_pointer</code>, на котором строится всё остальное в этом мосту.</p>
+        <p class="file-label">nativehost.cpp &mdash; загрузка рантайма</p>
+        <pre><code>bool load_hostfxr(wchar_t const* root_path)
+{
+    char_t buffer[MAX_PATH];
+    size_t buffer_size = sizeof(buffer) / sizeof(char_t);
+    if (get_hostfxr_path_wrapper(root_path, buffer, &buffer_size) != 0)
+        return false;
+
+    void* lib = load_library(root_path, buffer);
+    init_fptr        = (hostfxr_initialize_for_runtime_config_fn)
+                            get_export(root_path, lib, "hostfxr_initialize_for_runtime_config");
+    get_delegate_fptr = (hostfxr_get_runtime_delegate_fn)
+                            get_export(root_path, lib, "hostfxr_get_runtime_delegate");
+    close_fptr        = (hostfxr_close_fn)
+                            get_export(root_path, lib, "hostfxr_close");
+
+    return (init_fptr && get_delegate_fptr && close_fptr);
+}
+
+load_assembly_and_get_function_pointer_fn get_dotnet_load_assembly(const char_t* config_path)
+{
+    void* load_assembly_and_get_function_pointer = nullptr;
+    hostfxr_handle cxt = nullptr;
+
+    int rc = init_fptr(config_path, nullptr, &cxt);
+    if (cxt == nullptr)
+    {
+        std::cerr << "Init failed: " << std::hex << std::showbase << rc << std::endl;
+        close_fptr(cxt);
+        return nullptr;
+    }
+
+    rc = get_delegate_fptr(cxt, hdt_load_assembly_and_get_function_pointer,
+                            &load_assembly_and_get_function_pointer);
+    if (rc != 0 || load_assembly_and_get_function_pointer == nullptr)
+        std::cerr << "Get delegate failed: " << std::hex << std::showbase << rc << std::endl;
+
+    close_fptr(cxt);
+    return (load_assembly_and_get_function_pointer_fn)load_assembly_and_get_function_pointer;
+}</code></pre>
+
+        <h2>Нативная сторона: обобщённый загрузчик функций</h2>
+        <p>Пример от Microsoft, на котором основан этот механизм, демонстрирует загрузку <em>одной</em>
+            захардкоженной функции. Я обобщил его в переиспользуемый загрузчик: получая корень рантайма, имя
+            сборки, namespace, имя функции и имя типа делегата, он возвращает готовый к вызову указатель на
+            функцию для <em>любого</em> экспортируемого C#-метода &mdash; так что добавление нового
+            вызываемого-из-нативного-кода метода сводится к одной строке, а не к копированию всей процедуры
+            хостинга.</p>
+        <p class="file-label">nativehost.cpp (обобщённая версия)</p>
+        <pre><code>void* dotnet_clr_init(string_t root_path, string_t assembly_name,
+                       string_t func_namespace, string_t func_name,
+                       string_t delegate_name)
+{
+    bool ok = load_hostfxr(root_path.c_str());
+    assert(ok && "Failure: load_hostfxr()");
+
+    const string_t config_path = root_path + assembly_name + STR(".runtimeconfig.json");
+    auto load_assembly_and_get_function_pointer = get_dotnet_load_assembly(config_path.c_str());
+    assert(load_assembly_and_get_function_pointer != nullptr);
+
+    const string_t dotnetlib_path = root_path + assembly_name + STR(".dll");
+    const string_t dotnet_type = assembly_name + STR(".") + func_namespace + STR(", ") + assembly_name;
+
+    void* result = nullptr;
+    int rc = load_assembly_and_get_function_pointer(
+        dotnetlib_path.c_str(), dotnet_type.c_str(),
+        func_name.c_str(), delegate_name.c_str(), nullptr, (void**)&result);
+    assert(rc == 0 && result != nullptr);
+
+    return result;
+}
+
+// Один нативный экспорт с использованием загрузчика выше
+long WINAPI GetSqlServerVersion(HWND owner, wchar_t const* root_path,
+                                 wchar_t const* connection_string, char* out_result)
+{
+    typedef long (CORECLR_DELEGATE_CALLTYPE* get_version_fn)(HWND, wchar_t const*, char*);
+
+    auto get_version = (get_version_fn)dotnet_clr_init(
+        root_path, STR("DeploymentSupportNET"), STR("FuncFacade"),
+        STR("GetSqlServerVersion"),
+        STR("DeploymentSupportNET.FuncFacade+GetSqlServerVersionDelegate, DeploymentSupportNET"));
+
+    return get_version(owner, connection_string, out_result);
+}</code></pre>
+
+        <p>Нативный вызывающий код не резолвит экспорты этой DLL по имени на этапе линковки &mdash; он вызывает
+            конкретный символ, декорированный под <code>__stdcall</code>. Для каждого экспорта явно объявляется
+            корректный по calling convention линкерный алиас, а заголовочный файл содержит и объявление
+            <code>extern "C"</code>, и соответствующий <code>typedef</code> указателя на функцию для вызывающих,
+            загружающих DLL динамически.</p>
+        <p class="file-label">FuncFacadeNative.h &mdash; объявления экспортов</p>
+        <pre><code>#ifdef DEPLOYSUPPORT_EXPORTS
+#define DEPLOYSUPPORT_API __declspec(dllexport)
+#pragma comment(linker, "/export:GetSqlServerVersion=_GetSqlServerVersion@16")
+#else
+#define DEPLOYSUPPORT_API __declspec(dllimport)
+#endif
+
+extern "C" long DEPLOYSUPPORT_API WINAPI GetSqlServerVersion(
+    HWND owner, wchar_t const* root_path,
+    wchar_t const* connection_string, char* out_result);
+
+typedef long (WINAPI *GetSqlServerVersionFunc)(
+    HWND owner, wchar_t const* root_path,
+    wchar_t const* connection_string, char* out_result);</code></pre>
+
+        <h2>Managed-сторона: единый паттерн делегатов и маршалинга</h2>
+        <p>На стороне C# каждая вызываемая из нативного кода функция устроена одинаково: делегат, на который
+            может забиндиться нативный загрузчик, маршалинг «сырых» строковых указателей с учётом платформы,
+            структурированное логирование при входе в метод и централизованная обработка ошибок, которая
+            показывает сбой пользователю, а не молча роняет нативный хост.</p>
+        <p class="file-label">FuncFacade.cs (обобщённая версия)</p>
+        <pre><code>public static class FuncFacade
+{
+    public delegate int GetSqlServerVersionDelegate(
+        IntPtr owner, IntPtr connectionStringPtr, StringBuilder result);
+
+    public static int GetSqlServerVersion(
+        IntPtr owner, IntPtr connectionStringPtr, StringBuilder result)
+    {
+        string connectionString = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? Marshal.PtrToStringUni(connectionStringPtr)
+            : Marshal.PtrToStringUTF8(connectionStringPtr);
+
+        try
+        {
+            Logging.WriteLogEntry(nameof(GetSqlServerVersion),
+                $"invoked with connectionString={connectionString}");
+
+            string value = SqlSupport.ExecuteSqlScalar(
+                connectionString, "SELECT SERVERPROPERTY('ProductVersion')");
+            result.Clear().Append(value);
+            return true.GetHashCode();
+        }
+        catch (Exception ex)
+        {
+            Logging.WriteErrorLogEntry(nameof(GetSqlServerVersion), ex.ToString());
+            ShowMessageBox(owner, nameof(GetSqlServerVersion), ex.Message);
+            return false.GetHashCode();
+        }
+    }
+
+    public delegate int IsValidIdentifierDelegate(IntPtr owner, IntPtr inputPtr);
+
+    public static int IsValidIdentifier(IntPtr owner, IntPtr inputPtr)
+    {
+        string input = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? Marshal.PtrToStringUni(inputPtr)
+            : Marshal.PtrToStringUTF8(inputPtr);
+
+        try
+        {
+            Logging.WriteLogEntry(nameof(IsValidIdentifier), $"invoked with input={input}");
+            return InputValidation.IsAlphaNumeric(input) ? true.GetHashCode() : false.GetHashCode();
+        }
+        catch (Exception ex)
+        {
+            Logging.WriteErrorLogEntry(nameof(IsValidIdentifier), ex.ToString());
+            ShowMessageBox(owner, nameof(IsValidIdentifier), ex.Message);
+            return false.GetHashCode();
+        }
+    }
+}</code></pre>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Та же самая форма и для однострочной проверки
+            валидности, и для полноценного обращения к SQL &mdash; шаблонный код (маршалинг, логирование, показ
+            ошибок) идентичен в обоих случаях, так что добавление нового связанного метода почти целиком
+            сводится к одной строке настоящей логики.</p>
+
+        <h2>Что это доказывает</h2>
+        <ul class="highlights">
+            <li><strong>Знание .NET на уровне рантайма.</strong> Ручной хостинг CoreCLR через <code>hostfxr</code>/<code>nethost</code> требует понимания того, как рантайм .NET на самом деле находит, инициализирует и резолвит точки входа &mdash; а не только того, как им пользоваться.</li>
+            <li><strong>Владение Windows ABI.</strong> Нативная сторона экспортирует символы, декорированные под <code>__stdcall</code> (<code>#pragma comment(linker, "/export:...")</code>), с точным соответствием calling convention, которого ждёт вызывающий код &mdash; уровень ниже, чем работает большинство прикладных инженеров.</li>
+            <li><strong>Прагматичная архитектура.</strong> Вместо переписывания бизнес-логики на нативный код (трудоёмко, чревато ошибками, дублирует существующий код) или перевода нативного компонента в managed (не всегда возможно), мост остаётся тонким, а вся настоящая логика живёт в одном месте &mdash; в C#.</li>
+            <li><strong>Переиспользуемый паттерн, а не разовое решение.</strong> Обобщённый загрузчик вместе с соглашением о делегатах и маршалинге позволяли добавлять новые вызываемые-из-нативного-кода функции полностью на C#, ни разу не трогая нативный слой заново.</li>
+        </ul>
+
+        <p class="highlight-note">Это обобщённое, очищенное от лишнего описание реальной production-техники,
+            использованной в инструментах развёртывания RiverLogic &mdash; имена функций, специфичная для
+            продукта логика и бизнес-детали абстрагированы. Готов подробно разобрать реальную реализацию по
+            запросу.</p>
+
+        <footer>
+            <a class="back-link" href="index.html">&larr; Назад к портфолио</a>
+        </footer>
+    </div>
+</body>
+</html>

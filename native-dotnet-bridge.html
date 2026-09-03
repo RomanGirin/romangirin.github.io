@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Native C++ / .NET 8 Interop Bridge | Roman Girin</title>
+    <meta name="description" content="Case study: hosting the CoreCLR runtime in-process from unmanaged C++ to bridge native deployment tooling into a modern C# codebase, without C++/CLI or an out-of-process hop.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f172a'/%3E%3Ctext x='32' y='43' font-family='Arial,Helvetica,sans-serif' font-size='26' font-weight='700' fill='%2338bdf8' text-anchor='middle'%3ERG%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b1220;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --accent-2: #a78bfa;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(700px circle at 15% -5%, rgba(56, 189, 248, 0.12), transparent 60%),
+                radial-gradient(700px circle at 90% 10%, rgba(167, 139, 250, 0.10), transparent 55%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        h1, h2, .subtitle { font-family: 'Sora', 'Inter', system-ui, sans-serif; }
+        .container { max-width: 800px; width: 100%; }
+        .back-link { color: var(--accent-color); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        h1 { margin: 1.5rem 0 0.25rem; font-size: 2rem; font-weight: 700; }
+        .subtitle { color: var(--text-muted); margin-bottom: 2rem; }
+        h2 {
+            display: flex; align-items: center; gap: 0.6rem;
+            border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 2.5rem;
+        }
+        h2::before {
+            content: ''; width: 9px; height: 9px; border-radius: 3px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
+            display: inline-block; flex-shrink: 0;
+        }
+        p { color: var(--text-color); }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 1.5rem 0; }
+        .tags li { background: #334155; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; }
+        .highlight-note { color: var(--accent-color); font-weight: bold; }
+        code { background: #334155; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+        pre { background: #0b1220; border: 1px solid #334155; border-radius: 8px; padding: 1rem; overflow-x: auto; }
+        pre code { background: none; padding: 0; }
+        .file-label { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.5rem; }
+        ul.highlights { color: var(--text-color); padding-left: 1.25rem; }
+        ul.highlights li { margin-bottom: 0.6rem; }
+        footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <a class="back-link" href="index.html">&larr; Back to portfolio</a>
+            <a class="back-link" href="ru/native-dotnet-bridge.html">RU</a>
+        </div>
+        <h1>Native C++ / .NET 8 Interop Bridge</h1>
+        <p class="subtitle">RiverLogic Inc. &mdash; deployment &amp; provisioning tooling</p>
+
+        <ul class="tags">
+            <li>C++</li>
+            <li>.NET 8</li>
+            <li>CoreCLR Hosting</li>
+            <li>Native Interop</li>
+            <li>Windows ABI</li>
+        </ul>
+
+        <p>Part of RiverLogic's on-premise deployment and provisioning tooling: some native, legacy components
+            needed to run logic &mdash; SQL Server prerequisite checks, connection-string and config-file
+            patching, Windows service management, credential validation &mdash; that would have been far more
+            tedious and error-prone to reimplement in C++ than to keep in an existing, well-tested C# codebase.
+            Rather than porting that logic natively, I built a thin native bridge that hosts the CoreCLR runtime
+            in-process and calls straight into the C# implementation.</p>
+
+        <h2>How It Works</h2>
+        <p>The native component links against <code>nethost</code> and uses the official .NET hosting API
+            (<code>hostfxr.h</code>, <code>coreclr_delegates.h</code>) &mdash; the same low-level mechanism .NET
+            itself uses to bootstrap &mdash; to locate and initialize the CoreCLR runtime for a given
+            <code>.runtimeconfig.json</code>. It then resolves a raw function pointer to a static C# method
+            matching a custom unmanaged-callable delegate signature, and calls straight through it. No COM, no
+            out-of-process RPC, no C++/CLI mixed-mode compilation &mdash; just the runtime hosting APIs Microsoft
+            documents and ships, applied to bridge into an existing managed codebase from a native component that
+            can't easily become managed itself.</p>
+
+        <h2>Bootstrapping the Runtime</h2>
+        <p>Two steps happen before any managed code can run. First, <code>nethost</code> locates
+            <code>hostfxr</code> &mdash; the component that knows how to pick the right installed .NET runtime
+            &mdash; and its three exports are loaded by hand via <code>GetProcAddress</code>. Second, that
+            <code>hostfxr</code> handle is used to initialize the runtime for a specific
+            <code>.runtimeconfig.json</code> and hand back the one delegate type that matters:
+            <code>load_assembly_and_get_function_pointer</code>, which is what everything else in the bridge is
+            built on.</p>
+        <p class="file-label">nativehost.cpp &mdash; runtime bootstrap</p>
+        <pre><code>bool load_hostfxr(wchar_t const* root_path)
+{
+    char_t buffer[MAX_PATH];
+    size_t buffer_size = sizeof(buffer) / sizeof(char_t);
+    if (get_hostfxr_path_wrapper(root_path, buffer, &buffer_size) != 0)
+        return false;
+
+    void* lib = load_library(root_path, buffer);
+    init_fptr        = (hostfxr_initialize_for_runtime_config_fn)
+                            get_export(root_path, lib, "hostfxr_initialize_for_runtime_config");
+    get_delegate_fptr = (hostfxr_get_runtime_delegate_fn)
+                            get_export(root_path, lib, "hostfxr_get_runtime_delegate");
+    close_fptr        = (hostfxr_close_fn)
+                            get_export(root_path, lib, "hostfxr_close");
+
+    return (init_fptr && get_delegate_fptr && close_fptr);
+}
+
+load_assembly_and_get_function_pointer_fn get_dotnet_load_assembly(const char_t* config_path)
+{
+    void* load_assembly_and_get_function_pointer = nullptr;
+    hostfxr_handle cxt = nullptr;
+
+    int rc = init_fptr(config_path, nullptr, &cxt);
+    if (cxt == nullptr)
+    {
+        std::cerr << "Init failed: " << std::hex << std::showbase << rc << std::endl;
+        close_fptr(cxt);
+        return nullptr;
+    }
+
+    rc = get_delegate_fptr(cxt, hdt_load_assembly_and_get_function_pointer,
+                            &load_assembly_and_get_function_pointer);
+    if (rc != 0 || load_assembly_and_get_function_pointer == nullptr)
+        std::cerr << "Get delegate failed: " << std::hex << std::showbase << rc << std::endl;
+
+    close_fptr(cxt);
+    return (load_assembly_and_get_function_pointer_fn)load_assembly_and_get_function_pointer;
+}</code></pre>
+
+        <h2>Native Side: A Generic Function Loader</h2>
+        <p>The .NET hosting sample this is built on demonstrates loading <em>one</em> hardcoded function. I
+            generalized it into a reusable loader: given a runtime root, assembly name, namespace, function name,
+            and delegate type name, it returns a ready-to-call function pointer for <em>any</em> exported C#
+            method &mdash; so adding a new native-callable function is a one-line call, not a copy-pasted hosting
+            routine.</p>
+        <p class="file-label">nativehost.cpp (generalized)</p>
+        <pre><code>void* dotnet_clr_init(string_t root_path, string_t assembly_name,
+                       string_t func_namespace, string_t func_name,
+                       string_t delegate_name)
+{
+    bool ok = load_hostfxr(root_path.c_str());
+    assert(ok && "Failure: load_hostfxr()");
+
+    const string_t config_path = root_path + assembly_name + STR(".runtimeconfig.json");
+    auto load_assembly_and_get_function_pointer = get_dotnet_load_assembly(config_path.c_str());
+    assert(load_assembly_and_get_function_pointer != nullptr);
+
+    const string_t dotnetlib_path = root_path + assembly_name + STR(".dll");
+    const string_t dotnet_type = assembly_name + STR(".") + func_namespace + STR(", ") + assembly_name;
+
+    void* result = nullptr;
+    int rc = load_assembly_and_get_function_pointer(
+        dotnetlib_path.c_str(), dotnet_type.c_str(),
+        func_name.c_str(), delegate_name.c_str(), nullptr, (void**)&result);
+    assert(rc == 0 && result != nullptr);
+
+    return result;
+}
+
+// One native export using the loader above
+long WINAPI GetSqlServerVersion(HWND owner, wchar_t const* root_path,
+                                 wchar_t const* connection_string, char* out_result)
+{
+    typedef long (CORECLR_DELEGATE_CALLTYPE* get_version_fn)(HWND, wchar_t const*, char*);
+
+    auto get_version = (get_version_fn)dotnet_clr_init(
+        root_path, STR("DeploymentSupportNET"), STR("FuncFacade"),
+        STR("GetSqlServerVersion"),
+        STR("DeploymentSupportNET.FuncFacade+GetSqlServerVersionDelegate, DeploymentSupportNET"));
+
+    return get_version(owner, connection_string, out_result);
+}</code></pre>
+
+        <p>The native caller doesn't resolve this DLL's exports by name at link time &mdash; it calls a specific
+            <code>__stdcall</code>-decorated symbol. Each export gets its calling-convention-correct linker alias
+            declared explicitly, and the header exposes both the <code>extern "C"</code> declaration and a
+            matching function-pointer <code>typedef</code> for callers that load the DLL dynamically.</p>
+        <p class="file-label">FuncFacadeNative.h &mdash; export declarations</p>
+        <pre><code>#ifdef DEPLOYSUPPORT_EXPORTS
+#define DEPLOYSUPPORT_API __declspec(dllexport)
+#pragma comment(linker, "/export:GetSqlServerVersion=_GetSqlServerVersion@16")
+#else
+#define DEPLOYSUPPORT_API __declspec(dllimport)
+#endif
+
+extern "C" long DEPLOYSUPPORT_API WINAPI GetSqlServerVersion(
+    HWND owner, wchar_t const* root_path,
+    wchar_t const* connection_string, char* out_result);
+
+typedef long (WINAPI *GetSqlServerVersionFunc)(
+    HWND owner, wchar_t const* root_path,
+    wchar_t const* connection_string, char* out_result);</code></pre>
+
+        <h2>Managed Side: Consistent Delegate + Marshalling Pattern</h2>
+        <p>On the C# side, every native-callable function follows the same shape: a delegate the native loader
+            can bind to, platform-aware marshalling of the raw string pointers the native caller passes in,
+            structured logging on entry, and centralized error handling that surfaces failures back to the user
+            rather than crashing the native host silently.</p>
+        <p class="file-label">FuncFacade.cs (generalized)</p>
+        <pre><code>public static class FuncFacade
+{
+    public delegate int GetSqlServerVersionDelegate(
+        IntPtr owner, IntPtr connectionStringPtr, StringBuilder result);
+
+    public static int GetSqlServerVersion(
+        IntPtr owner, IntPtr connectionStringPtr, StringBuilder result)
+    {
+        string connectionString = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? Marshal.PtrToStringUni(connectionStringPtr)
+            : Marshal.PtrToStringUTF8(connectionStringPtr);
+
+        try
+        {
+            Logging.WriteLogEntry(nameof(GetSqlServerVersion),
+                $"invoked with connectionString={connectionString}");
+
+            string value = SqlSupport.ExecuteSqlScalar(
+                connectionString, "SELECT SERVERPROPERTY('ProductVersion')");
+            result.Clear().Append(value);
+            return true.GetHashCode();
+        }
+        catch (Exception ex)
+        {
+            Logging.WriteErrorLogEntry(nameof(GetSqlServerVersion), ex.ToString());
+            ShowMessageBox(owner, nameof(GetSqlServerVersion), ex.Message);
+            return false.GetHashCode();
+        }
+    }
+
+    public delegate int IsValidIdentifierDelegate(IntPtr owner, IntPtr inputPtr);
+
+    public static int IsValidIdentifier(IntPtr owner, IntPtr inputPtr)
+    {
+        string input = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? Marshal.PtrToStringUni(inputPtr)
+            : Marshal.PtrToStringUTF8(inputPtr);
+
+        try
+        {
+            Logging.WriteLogEntry(nameof(IsValidIdentifier), $"invoked with input={input}");
+            return InputValidation.IsAlphaNumeric(input) ? true.GetHashCode() : false.GetHashCode();
+        }
+        catch (Exception ex)
+        {
+            Logging.WriteErrorLogEntry(nameof(IsValidIdentifier), ex.ToString());
+            ShowMessageBox(owner, nameof(IsValidIdentifier), ex.Message);
+            return false.GetHashCode();
+        }
+    }
+}</code></pre>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Same shape for a one-line validation check as for
+            a SQL round-trip &mdash; the boilerplate (marshalling, logging, error surfacing) is identical either
+            way, so adding a new bridged function is almost entirely about the one line of actual logic.</p>
+
+        <h2>What It Proves</h2>
+        <ul class="highlights">
+            <li><strong>Runtime-level .NET knowledge.</strong> Hosting CoreCLR manually via <code>hostfxr</code>/<code>nethost</code> requires understanding how the .NET runtime actually locates, initializes, and resolves entry points &mdash; not just how to consume it.</li>
+            <li><strong>Windows ABI fluency.</strong> The native side exports <code>__stdcall</code>-decorated symbols (<code>#pragma comment(linker, "/export:...")</code>) matching the calling convention the native caller expects &mdash; a level below where most application-level engineers work.</li>
+            <li><strong>Pragmatic architecture.</strong> Rather than reimplementing business logic natively (tedious, error-prone, duplicated) or forcing the native component to become managed (not always possible), the bridge stays thin and every actual behavior lives once, in C#.</li>
+            <li><strong>A reusable pattern, not a one-off.</strong> The generic loader plus the delegate/marshalling convention meant new native-callable functions could be added purely in C#, without touching the native shim again.</li>
+        </ul>
+
+        <p class="highlight-note">This is a generalized, sanitized write-up of a real production technique used
+            in RiverLogic's deployment tooling &mdash; function names, product-specific logic, and business
+            details have been abstracted out. Happy to walk through the actual implementation in more depth on
+            request.</p>
+
+        <footer>
+            <a class="back-link" href="index.html">&larr; Back to portfolio</a>
+        </footer>
+    </div>
+</body>
+</html>
