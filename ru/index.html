@@ -98,6 +98,8 @@
         .stack-group { margin-bottom: 1.5rem; }
         .stack-group:last-child { margin-bottom: 0; }
         .stack-group h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 0.6rem; font-weight: 600; }
+        .project-subheading { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 0.75rem; font-weight: 600; }
+        .project-subheading:not(:first-of-type) { margin-top: 2rem; }
         .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
         .tags li { background: #334155; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; }
         .project-grid { display: grid; gap: 1.5rem; }
@@ -214,7 +216,6 @@
                     <li>RAG / pgvector</li>
                     <li>LoRA Fine-Tuning</li>
                     <li>MS Semantic Kernel</li>
-                    <li>Claude Code</li>
                 </ul>
             </div>
             <div class="stack-group">
@@ -246,6 +247,8 @@
 
         <section id="projects">
             <h2>Избранные проекты</h2>
+
+            <h3 class="project-subheading">Корпоративные системы и генеративный ИИ</h3>
             <div class="project-grid">
                 <div class="project-card">
                     <h3>Модернизация платформы RiverLogic VCO</h3>
@@ -265,6 +268,10 @@
                         <a href="river-logic.html">Подробнее &rarr;</a>
                     </div>
                 </div>
+            </div>
+
+            <h3 class="project-subheading">Компьютерное зрение и прикладной ML</h3>
+            <div class="project-grid">
                 <div class="project-card">
                     <h3>Система распознавания автомобильных номеров (ANPR)</h3>
                     <p>Спроектировал и реализовал промышленную ANPR-систему (автоматическое распознавание
@@ -336,11 +343,11 @@
                 </div>
                 <p class="job-role">Старший разработчик, ПО для моделирования &mdash; Value Chain Optimization (VCO)</p>
                 <ul>
+                    <li><strong>Разработка ИИ-ассистента:</strong> реализовал RAG и векторный поиск по эмбеддингам, предоставил основной функционал через OpenAPI-совместимый ASP.NET 8 REST HATEOAS API в виде плагина MS Semantic Kernel &mdash; инструментарий для ИИ-ассистента RIA компании RiverLogic.</li>
+                    <li><strong>Fine-tuning LLM:</strong> провёл R&amp;D по дообучению LLM через LoRA (Python, PyTorch, Transformers) для адаптации open-source моделей под специализированные корпоративные workflow.</li>
                     <li><strong>Архитектурная эволюция:</strong> руководил модернизацией с устаревшей 2-звенной архитектуры на 3-звенную без простоя в продакшене, перенеся слой бизнес-логики с T-SQL на сервер приложений .NET C# &mdash; на 30% меньше обращений в саппорт.</li>
                     <li><strong>Миграция с Windows на Linux:</strong> перевёл кодовую базу с .NET Framework на .NET 8 для полной кроссплатформенности и внедрил async/await &mdash; снижение потребления ресурсов на 15%.</li>
                     <li><strong>Облачное развёртывание:</strong> декомпозировал on-premise монолит на высоконагруженные микросервисы на Azure Container Apps, Container Instances, AKS и serverless Azure Functions, используя EDA (Event Grid/Queues), Saga, CQRS и паттерн Outbox для распределённой консистентности данных.</li>
-                    <li><strong>Разработка ИИ-ассистента:</strong> реализовал RAG и векторный поиск по эмбеддингам, предоставил основной функционал через OpenAPI-совместимый ASP.NET 8 REST HATEOAS API в виде плагина MS Semantic Kernel &mdash; инструментарий для ИИ-ассистента RIA компании RiverLogic.</li>
-                    <li><strong>Fine-tuning LLM:</strong> провёл R&amp;D по дообучению LLM через LoRA (Python, PyTorch, Transformers) для адаптации open-source моделей под специализированные корпоративные workflow.</li>
                     <li><strong>Обеспечение качества:</strong> практиковал DDD/SOLID/TDD, поддерживал релизы без простоя за счёт полных наборов юнит-, интеграционных и end-to-end тестов (NUnit, xUnit, NSubstitute).</li>
                     <li><strong>Развитие команды:</strong> внедрил agentic AI-воркфлоу (Claude Code) в команде разработки, повысив скорость разработки.</li>
                 </ul>

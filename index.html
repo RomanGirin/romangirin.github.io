@@ -98,6 +98,8 @@
         .stack-group { margin-bottom: 1.5rem; }
         .stack-group:last-child { margin-bottom: 0; }
         .stack-group h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 0.6rem; font-weight: 600; }
+        .project-subheading { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 0.75rem; font-weight: 600; }
+        .project-subheading:not(:first-of-type) { margin-top: 2rem; }
         .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
         .tags li { background: #334155; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; }
         .project-grid { display: grid; gap: 1.5rem; }
@@ -213,7 +215,6 @@
                     <li>RAG / pgvector</li>
                     <li>LoRA Fine-Tuning</li>
                     <li>MS Semantic Kernel</li>
-                    <li>Claude Code</li>
                 </ul>
             </div>
             <div class="stack-group">
@@ -245,6 +246,8 @@
 
         <section id="projects">
             <h2>Featured Projects</h2>
+
+            <h3 class="project-subheading">Enterprise Systems &amp; Generative AI</h3>
             <div class="project-grid">
                 <div class="project-card">
                     <h3>RiverLogic VCO Platform Modernization</h3>
@@ -264,6 +267,10 @@
                         <a href="river-logic.html">Details &rarr;</a>
                     </div>
                 </div>
+            </div>
+
+            <h3 class="project-subheading">Computer Vision &amp; Applied ML</h3>
+            <div class="project-grid">
                 <div class="project-card">
                     <h3>ANPR / License-Plate Recognition Pipeline</h3>
                     <p>Designed and built a production ANPR (Automatic Number-Plate Recognition) system on
@@ -335,11 +342,11 @@
                 </div>
                 <p class="job-role">Senior Developer, Modelling Software &mdash; Value Chain Optimization (VCO)</p>
                 <ul>
+                    <li><strong>AI assistant development:</strong> built RAG and embedding vector search, and exposed core functionality through an OpenAPI-compliant ASP.NET 8 REST HATEOAS API as an MS Semantic Kernel plugin, delivering tooling for RiverLogic's AI assistant, RIA.</li>
+                    <li><strong>LLM fine-tuning:</strong> ran LoRA fine-tuning (Python, PyTorch, Transformers) to align open-source models for domain-specific enterprise workflows.</li>
                     <li><strong>Architectural evolution:</strong> led modernization from legacy 2-tier to 3-tier architecture with zero downtime, migrating the business logic layer from T-SQL to a .NET C# application server &mdash; a 30% reduction in support ticket volume.</li>
                     <li><strong>Windows to Linux migration:</strong> moved the core codebase from .NET Framework to .NET 8 for full cross-platform compatibility and async/await adoption, cutting resource consumption by 15%.</li>
                     <li><strong>Cloud deployment:</strong> decomposed an on-premise monolith into high-load microservices across Azure Container Apps, Container Instances, AKS, and serverless Azure Functions, using EDA (Event Grid/Queues), Saga, CQRS, and the Outbox pattern for distributed consistency.</li>
-                    <li><strong>AI assistant development:</strong> built RAG and embedding vector search, and exposed core functionality through an OpenAPI-compliant ASP.NET 8 REST HATEOAS API as an MS Semantic Kernel plugin, delivering tooling for RiverLogic's AI assistant, RIA.</li>
-                    <li><strong>LLM fine-tuning:</strong> ran LoRA fine-tuning (Python, PyTorch, Transformers) to align open-source models for domain-specific enterprise workflows.</li>
                     <li><strong>Quality assurance:</strong> practiced DDD/SOLID/TDD and maintained zero-downtime releases via comprehensive unit, integration, and end-to-end test suites (NUnit, xUnit, NSubstitute).</li>
                     <li><strong>Team upskilling:</strong> introduced agentic AI workflows (Claude Code) across the engineering team, raising development velocity.</li>
                 </ul>
