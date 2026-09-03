@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiverLogic VCO Platform Modernization | Roman Girin</title>
+    <meta name="description" content="Case study: Roman Girin's decade-long architectural modernization of RiverLogic's Value Chain Optimization platform &mdash; 2-tier monolith to event-driven Azure microservices, plus enterprise AI integration.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f172a'/%3E%3Ctext x='32' y='43' font-family='Arial,Helvetica,sans-serif' font-size='26' font-weight='700' fill='%2338bdf8' text-anchor='middle'%3ERG%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b1220;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --accent-2: #a78bfa;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(700px circle at 15% -5%, rgba(56, 189, 248, 0.12), transparent 60%),
+                radial-gradient(700px circle at 90% 10%, rgba(167, 139, 250, 0.10), transparent 55%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        h1, h2, .subtitle { font-family: 'Sora', 'Inter', system-ui, sans-serif; }
+        .container { max-width: 800px; width: 100%; }
+        .back-link { color: var(--accent-color); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        h1 { margin: 1.5rem 0 0.25rem; font-size: 2rem; font-weight: 700; }
+        .subtitle { color: var(--text-muted); margin-bottom: 1.5rem; }
+        h2 {
+            display: flex; align-items: center; gap: 0.6rem;
+            border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 2.5rem;
+        }
+        h2::before {
+            content: ''; width: 9px; height: 9px; border-radius: 3px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
+            display: inline-block; flex-shrink: 0;
+        }
+        p { color: var(--text-color); }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 1.5rem 0; }
+        .tags li { background: #334155; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; }
+        .highlight-note { color: var(--accent-color); font-weight: bold; }
+        .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0 2rem; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem 1rem; text-align: center; }
+        .stat-card .stat-num { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.8rem; color: var(--accent-color); }
+        .stat-card .stat-label { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem; }
+        @media (max-width: 560px) { .stat-row { grid-template-columns: 1fr; } }
+        .diagram-wrap { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0; }
+        .diagram-wrap svg { display: block; width: 100%; height: auto; }
+        .diagram-caption { color: var(--text-muted); font-size: 0.85rem; text-align: center; margin-top: 0.75rem; }
+        ul.highlights { color: var(--text-color); padding-left: 1.25rem; }
+        ul.highlights li { margin-bottom: 0.6rem; }
+        footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back-link" href="index.html">&larr; Back to portfolio</a>
+        <h1>RiverLogic VCO Platform Modernization</h1>
+        <p class="subtitle">RiverLogic Inc. &mdash; Senior Developer / AI Architect &middot; March 2014 &ndash; Present</p>
+
+        <ul class="tags">
+            <li>C# / .NET 8</li>
+            <li>Azure AKS &amp; Container Apps</li>
+            <li>Event-Driven Architecture</li>
+            <li>RAG</li>
+            <li>MS Semantic Kernel</li>
+            <li>LoRA Fine-Tuning</li>
+        </ul>
+
+        <p>RiverLogic builds Value Chain Optimization (VCO) software &mdash; large-scale linear-programming
+            models that help enterprise customers plan production, logistics, and supply chains. I've spent
+            over a decade as the engineer driving this platform's architecture forward: from a 2-tier on-prem
+            monolith to an event-driven Azure microservices platform, and more recently, into enterprise AI
+            tooling built on top of it.</p>
+
+        <div class="stat-row">
+            <div class="stat-card"><div class="stat-num">30%</div><div class="stat-label">fewer support tickets after the BLL migration</div></div>
+            <div class="stat-card"><div class="stat-num">15%</div><div class="stat-label">lower resource consumption after the .NET 8 move</div></div>
+            <div class="stat-card"><div class="stat-num">10+</div><div class="stat-label">years driving the platform's architecture</div></div>
+        </div>
+
+        <h2>Architectural Evolution</h2>
+        <p>The platform started as a 2-tier system with business logic embedded in MSSQL T-SQL stored
+            procedures &mdash; hard to test, hard to change safely. I led the migration of that business logic
+            layer (BLL) into a .NET C# application server, restructuring the system into a proper 3-tier
+            architecture with zero downtime during the cutover. Beyond the 30% drop in support tickets, this
+            materially improved the system's security posture and stability, and added PostgreSQL compatibility
+            alongside the existing MSSQL support &mdash; opening the door to cloud-native deployment.</p>
+
+        <h2>Windows to Linux, .NET Framework to .NET 8</h2>
+        <p>With the business logic now in C#, the next step was making it cloud-portable: migrating the codebase
+            from .NET Framework to .NET 8 for full cross-platform (Linux) compatibility, and adopting async/await
+            throughout. That cut resource consumption by roughly 15% and removed the last dependency tying the
+            application server to Windows.</p>
+
+        <h2>Event-Driven Microservices on Azure</h2>
+        <p>The on-premise monolith was decomposed into high-load microservices running on Azure Kubernetes
+            Service and Container Apps. Services talk to each other over REST for synchronous calls and Azure
+            Event Grid / Queues for asynchronous messaging, with Saga, CQRS, and the Outbox pattern keeping data
+            consistent across services that no longer share a single database transaction.</p>
+
+        <div class="diagram-wrap">
+            <svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                        <path d="M0,0 L10,5 L0,10 z" fill="var(--text-muted)"/>
+                    </marker>
+                </defs>
+                <style>
+                    .box { fill: var(--bg-color); stroke: var(--border-color); stroke-width: 1.5; rx: 10; }
+                    .box-accent { stroke: var(--accent-color); }
+                    .lbl { font-family: 'Inter', sans-serif; font-size: 16px; fill: var(--text-color); text-anchor: middle; }
+                    .lbl-sub { font-family: 'Inter', sans-serif; font-size: 12px; fill: var(--text-muted); text-anchor: middle; }
+                    .flow-line { stroke: var(--text-muted); stroke-width: 2; fill: none; marker-end: url(#arrow); }
+                </style>
+
+                <rect class="box box-accent" x="120" y="10" width="400" height="70"/>
+                <text class="lbl" x="320" y="40">Client &amp; RIA AI Assistant</text>
+                <text class="lbl-sub" x="320" y="60">Web UI / Semantic Kernel plugin caller</text>
+
+                <path class="flow-line" d="M320,80 L320,115"/>
+
+                <rect class="box" x="100" y="120" width="440" height="70"/>
+                <text class="lbl" x="320" y="150">ASP.NET 8 REST HATEOAS API Gateway</text>
+                <text class="lbl-sub" x="320" y="170">OpenAPI-compliant, versioned contract</text>
+
+                <path class="flow-line" d="M320,190 L320,225"/>
+
+                <rect class="box box-accent" x="60" y="230" width="520" height="80"/>
+                <text class="lbl" x="320" y="262">AKS / Container Apps Microservices</text>
+                <text class="lbl-sub" x="320" y="284">BLL &middot; AI / RAG &middot; other domain services</text>
+
+                <path class="flow-line" d="M320,310 L320,345"/>
+
+                <rect class="box" x="80" y="350" width="480" height="80"/>
+                <text class="lbl" x="320" y="382">Azure Event Grid / Queues &mdash; EDA</text>
+                <text class="lbl-sub" x="320" y="404">Async messaging &middot; Saga &middot; CQRS &middot; Outbox</text>
+
+                <path class="flow-line" d="M320,430 L320,465"/>
+
+                <rect class="box" x="140" y="470" width="360" height="70"/>
+                <text class="lbl" x="320" y="500">PostgreSQL + MSSQL</text>
+                <text class="lbl-sub" x="320" y="520">Per-service data stores</text>
+
+                <path class="flow-line" d="M320,540 L320,575"/>
+
+                <rect class="box" x="120" y="580" width="400" height="55" stroke-dasharray="5,4"/>
+                <text class="lbl-sub" x="320" y="605">Migrated from: 2-tier on-prem monolith,</text>
+                <text class="lbl-sub" x="320" y="622">business logic in MSSQL T-SQL stored procedures</text>
+            </svg>
+            <p class="diagram-caption">Current platform architecture, top to bottom &mdash; and what it replaced, at the bottom.</p>
+        </div>
+
+        <h2>Enterprise AI Integration</h2>
+        <p>More recently, this architecture became the foundation for RiverLogic's AI assistant, <strong>RIA</strong>.
+            I implemented retrieval-augmented generation (RAG) with embedding vector search, and exposed core VCO
+            functionality to RIA through an OpenAPI-compliant REST HATEOAS API wrapped as a Microsoft Semantic
+            Kernel plugin &mdash; letting the assistant call real platform capabilities, not just talk about them.
+            On the modeling side, I ran R&amp;D on LLM fine-tuning via LoRA (Python, PyTorch, Transformers) to
+            align open-source models for domain-specific enterprise workflows, and separately prototyped a graph
+            neural network for LP-feasibility pre-screening &mdash; see the
+            <a href="gcnn-poc.html" style="color: var(--accent-color);">GCNN proof-of-concept</a> for that one.</p>
+
+        <h2>Engineering Culture</h2>
+        <p>Architecture work only sticks if the team can build on it safely. I practiced DDD, SOLID, and GoF
+            patterns throughout, and built out comprehensive unit and integration test suites (xUnit,
+            NSubstitute) under TDD to keep releases zero-downtime as the system grew more distributed. I also
+            introduced Claude Code-based agentic workflows to the engineering team, cutting down repetitive code
+            drafting and raising overall development velocity, and manage the team's build/deploy pipelines
+            through Azure DevOps.</p>
+
+        <p class="highlight-note">My core production codebase here is protected by strict corporate NDAs and
+            proprietary business logic, so it isn't publicly visible on GitHub &mdash; happy to walk through the
+            architecture or specific decisions in more depth on request.</p>
+
+        <footer>
+            <a class="back-link" href="index.html">&larr; Back to portfolio</a>
+        </footer>
+    </div>
+</body>
+</html>
