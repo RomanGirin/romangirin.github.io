@@ -269,10 +269,10 @@ typedef long (WINAPI *GetSqlServerVersionFunc)(
             a SQL round-trip &mdash; the boilerplate (marshalling, logging, error surfacing) is identical either
             way, so adding a new bridged function is almost entirely about the one line of actual logic.</p>
 
-        <h2>What It Proves</h2>
+        <h2>Hands-On Result</h2>
         <ul class="highlights">
-            <li><strong>Runtime-level .NET knowledge.</strong> Hosting CoreCLR manually via <code>hostfxr</code>/<code>nethost</code> requires understanding how the .NET runtime actually locates, initializes, and resolves entry points &mdash; not just how to consume it.</li>
-            <li><strong>Windows ABI fluency.</strong> The native side exports <code>__stdcall</code>-decorated symbols (<code>#pragma comment(linker, "/export:...")</code>) matching the calling convention the native caller expects &mdash; a level below where most application-level engineers work.</li>
+            <li><strong>Runtime hosted directly.</strong> CoreCLR is located, initialized, and resolved into entry points by hand via <code>hostfxr</code>/<code>nethost</code>, rather than through a higher-level wrapper or C++/CLI.</li>
+            <li><strong>Correct native linkage.</strong> The native side exports <code>__stdcall</code>-decorated symbols (<code>#pragma comment(linker, "/export:...")</code>) so the calling convention matches exactly what the native caller expects.</li>
             <li><strong>Pragmatic architecture.</strong> Rather than reimplementing business logic natively (tedious, error-prone, duplicated) or forcing the native component to become managed (not always possible), the bridge stays thin and every actual behavior lives once, in C#.</li>
             <li><strong>A reusable pattern, not a one-off.</strong> The generic loader plus the delegate/marshalling convention meant new native-callable functions could be added purely in C#, without touching the native shim again.</li>
         </ul>
