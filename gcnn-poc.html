@@ -74,7 +74,7 @@
             <a class="back-link" href="ru/gcnn-poc.html">RU</a>
         </div>
         <h1>Graph Neural Net for LP Feasibility Pre-Screening</h1>
-        <p class="subtitle">R&amp;D proof-of-concept &mdash; RiverLogic Value Chain Optimization (VCO) software</p>
+        <p class="subtitle">Engineering proof-of-concept &mdash; RiverLogic Value Chain Optimization (VCO) software</p>
 
         <ul class="tags">
             <li>PyTorch Geometric</li>
@@ -89,9 +89,10 @@
             feasibility cheaply, before committing to a full solve &mdash; a lightweight gate in front of
             RiverLogic's VCO solver pipeline.</p>
 
-        <h2>Hypothesis</h2>
-        <p>We proposed estimating LP feasibility using a graph convolutional neural network (GCNN).
-            Representing an LP problem as a bipartite graph is a scientifically grounded approach
+        <h2>Approach</h2>
+        <p>The idea: estimate LP feasibility using a graph convolutional neural network (GCNN) instead of
+            running the full solver. Representing an LP problem as a bipartite graph is a scientifically
+            grounded approach
             (<a href="https://arxiv.org/abs/2012.13349" target="_blank" style="color: var(--accent-color);">arXiv:2012.13349</a>,
             <a href="https://arxiv.org/abs/2302.05636" target="_blank" style="color: var(--accent-color);">arXiv:2302.05636</a>),
             and using that graph representation to make general approximate estimations about the problem is

@@ -74,7 +74,7 @@
             <a class="back-link" href="../gcnn-poc.html">EN</a>
         </div>
         <h1>Графовая нейросеть для оценки разрешимости LP-задач</h1>
-        <p class="subtitle">R&amp;D-прототип &mdash; ПО RiverLogic Value Chain Optimization (VCO)</p>
+        <p class="subtitle">Инженерный прототип &mdash; ПО RiverLogic Value Chain Optimization (VCO)</p>
 
         <ul class="tags">
             <li>PyTorch Geometric</li>
@@ -89,9 +89,9 @@
             дёшево оценивать разрешимость LP-задачи ещё до полного решения &mdash; лёгкий фильтр перед солвером
             VCO компании RiverLogic.</p>
 
-        <h2>Гипотеза</h2>
-        <p>Мы предложили оценивать разрешимость LP-задач с помощью графовой свёрточной нейросети (GCNN).
-            Представление LP-задачи в виде двудольного графа &mdash; научно обоснованный подход
+        <h2>Подход</h2>
+        <p>Идея: оценивать разрешимость LP-задач с помощью графовой свёрточной нейросети (GCNN) вместо запуска
+            полного солвера. Представление LP-задачи в виде двудольного графа &mdash; научно обоснованный подход
             (<a href="https://arxiv.org/abs/2012.13349" target="_blank" style="color: var(--accent-color);">arXiv:2012.13349</a>,
             <a href="https://arxiv.org/abs/2302.05636" target="_blank" style="color: var(--accent-color);">arXiv:2302.05636</a>),
             и использование такого графового представления для приближённых оценок задачи также подтверждается
