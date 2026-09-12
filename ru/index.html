@@ -148,6 +148,8 @@
         .job ul { margin: 0; padding-left: 1.25rem; color: var(--text-muted); }
         .job li { margin-bottom: 0.4rem; }
         .job li strong { color: var(--text-color); }
+        .job-subheading { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-color); margin: 1rem 0 0.5rem; font-weight: 700; }
+        .job-subheading:first-of-type { margin-top: 0.5rem; }
         .edu-item { margin-bottom: 1rem; }
         .edu-item h3 { margin: 0 0 0.15rem; }
         .edu-item .job-dates { display: block; margin-bottom: 0.35rem; }
@@ -339,15 +341,19 @@
                     <span class="job-dates">Март 2014 &ndash; по настоящее время</span>
                 </div>
                 <p class="job-role">Senior Modeling Software .NET Developer / AI Engineer</p>
+                <h4 class="job-subheading">AI &amp; LLM ENGINEERING</h4>
+                <ul>
+                    <li><strong>Интеграция AI в экосистему .NET:</strong> спроектировал и развернул промышленные корпоративные системы RAG с использованием векторных эмбеддингов (pgvector). Разработал плагин для MS Semantic Kernel для интеграции основного ПО через ASP.NET 8 REST HATEOAS API, обеспечив интеграцию инструментов в LLM-ассистента.</li>
+                    <li><strong>Инфраструктура LLM на Python:</strong> проводил целевые R&amp;D исследования и выполнял тонкую настройку (fine-tuning) открытых LLM-моделей по методу LoRA с использованием библиотеки Transformers (Python, PyTorch) для адаптации и оптимизации open-source моделей под специфику корпоративных рабочих процессов. Пост-fine-tuning тестирование моделей с EleutherAI.</li>
+                    <li><strong>Повышение квалификации команды:</strong> внедрил агентские AI-инструменты автоматизации (Claude Code) в инженерной команде, что повысило скорость разработки.</li>
+                </ul>
+                <h4 class="job-subheading">SOFTWARE ARCHITECTURE &amp; .NET DEVELOPMENT</h4>
                 <ul>
                     <li><strong>Модернизация архитектуры:</strong> руководил переходом архитектуры системы с устаревшей 2-уровневой на 3-уровневую. Мигрировал слой бизнес-логики (BLL) с уровня базы данных (MSSQL T-SQL) на уровень приложения .NET (C#), что повысило поддерживаемость системы и снизило объем тикетов в техподдержку на 30%. Реализовал совместимость с PostgreSQL.</li>
                     <li><strong>Миграция с Windows на Linux:</strong> возглавил миграцию основного кода с .NET Framework на кроссплатформенный .NET 8. Внедрил современную асинхронную модель программирования (async/await), что снизило потребление системных ресурсов на 15%.</li>
                     <li><strong>Микросервисы в облаке:</strong> декомпозировал локальный (on-premise) монолит на высоконагруженные микросервисы, развернутые в Azure Container Apps и Azure Kubernetes Service (AKS). Спроектировал межсервисное взаимодействие с использованием REST и асинхронного обмена сообщениями EDA (Azure Event Grid / Queues), обеспечив согласованность данных в распределенной системе с помощью паттернов Saga, CQRS и Outbox.</li>
-                    <li><strong>Интеграция AI в экосистему .NET:</strong> спроектировал и развернул промышленные корпоративные системы RAG с использованием векторных эмбеддингов (pgvector). Разработал плагин для MS Semantic Kernel для интеграции основного ПО через ASP.NET 8 REST HATEOAS API, обеспечив безопасную интеграцию LLM-ассистентов.</li>
-                    <li><strong>Инфраструктура LLM на Python:</strong> проводил целевые R&amp;D исследования и выполнял тонкую настройку (fine-tuning) открытых LLM-моделей по методу LoRA с использованием библиотеки Transformers (Python, PyTorch) для адаптации и оптимизации open-source моделей под специфику корпоративных рабочих процессов.</li>
                     <li><strong>Интероперабельность:</strong> разрабатывал критически важные компоненты на C++ для интеграции управляемого кода CLR с нативным кодом &mdash; см. <a href="native-dotnet-bridge.html" style="color: var(--accent-color);">описание моста</a>.</li>
                     <li><strong>Инженерная культура:</strong> практикую DDD, SOLID, GoF. Установил стандарты тестирования, внедрив комплексное модульное и интеграционное тестирование (xUnit, NSubstitute) и методологию TDD. Управлял процессами сборки и развертывания через пайплайны Azure DevOps.</li>
-                    <li><strong>Повышение квалификации команды:</strong> внедрил агентские AI-инструменты автоматизации (Claude Code) в инженерной команде, что повысило скорость разработки.</li>
                 </ul>
                 <div class="project-links">
                     <a href="river-logic.html">Читать полный кейс-стади &rarr;</a>

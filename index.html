@@ -148,6 +148,8 @@
         .job ul { margin: 0; padding-left: 1.25rem; color: var(--text-muted); }
         .job li { margin-bottom: 0.4rem; }
         .job li strong { color: var(--text-color); }
+        .job-subheading { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-color); margin: 1rem 0 0.5rem; font-weight: 700; }
+        .job-subheading:first-of-type { margin-top: 0.5rem; }
         .edu-item { margin-bottom: 1rem; }
         .edu-item h3 { margin: 0 0 0.15rem; }
         .edu-item .job-dates { display: block; margin-bottom: 0.35rem; }
@@ -335,15 +337,19 @@
                     <span class="job-dates">March 2014 &ndash; Present</span>
                 </div>
                 <p class="job-role">Senior Modeling Software .NET Developer / AI Engineer</p>
+                <h4 class="job-subheading">AI &amp; LLM Engineering</h4>
+                <ul>
+                    <li><strong>AI Orchestration into .NET Ecosystem:</strong> architected and deployed production enterprise RAG systems leveraging vector embeddings (pgvector). Built an MS Semantic Kernel plugin to integrate core software via ASP.NET 8 REST HATEOAS API, enabling tooling integration into the LLM assistant.</li>
+                    <li><strong>Python-Driven LLM R&amp;D:</strong> conducted target R&amp;D and executed open-source LLM fine-tuning via LoRA using the Transformers library (Python, PyTorch) to customize, optimize, and align open-source models for domain-specific enterprise workflows. Post-fine-tuning model evaluation via EleutherAI.</li>
+                    <li><strong>Team Upskilling:</strong> introduced agentic AI workflows (Claude Code) across the engineering team, raising development velocity.</li>
+                </ul>
+                <h4 class="job-subheading">Software Architecture &amp; .NET Development</h4>
                 <ul>
                     <li><strong>Architecture Modernization:</strong> spearheaded the architectural transition from a legacy 2-tier to 3-tier architecture. Migrated the Business Logic Layer (BLL) from the database tier (MSSQL T-SQL) into the .NET application layer (C#), improving system maintainability and resulting in a 30% reduction in support ticket volume. Implemented compatibility with PostgreSQL.</li>
                     <li><strong>Windows to Linux Migration:</strong> spearheaded the core codebase migration from .NET Framework to cross-platform .NET 8, implementing a modern asynchronous programming model (async/await) that slashed system resource utilization by 15%.</li>
-                    <li><strong>Distributed Microservices in Cloud:</strong> decomposed an on-premise monolith into high-load microservices deployed on Azure Container Apps and Azure Kubernetes Service (AKS). Designed inter-service communication using REST and asynchronous messaging EDA (Azure Event Grid / Queues), ensuring distributed data consistency via Saga, CQRS, and Outbox patterns.</li>
-                    <li><strong>AI Orchestration into .NET Ecosystem:</strong> architected and deployed production enterprise RAG systems leveraging vector embeddings (pgvector). Built an MS Semantic Kernel plugin to integrate core software via ASP.NET 8 REST HATEOAS API, enabling secure LLM assistant integration.</li>
-                    <li><strong>Python-Driven LLM Infrastructure:</strong> conducted target R&amp;D and executed open-source LLM fine-tuning via LoRA using the Transformers library (Python, PyTorch) to customize, optimize, and align open-source models for domain-specific enterprise workflows.</li>
-                    <li><strong>Interoperability:</strong> developed critical components in C++ to seamlessly integrate CLR-managed and native code &mdash; see the <a href="native-dotnet-bridge.html" style="color: var(--accent-color);">interop bridge write-up</a>.</li>
+                    <li><strong>Microservices in Cloud:</strong> decomposed an on-premise monolith into high-load microservices deployed on Azure Container Apps and Azure Kubernetes Service (AKS). Designed inter-service communication using REST and asynchronous messaging EDA (Azure Event Grid / Queues), ensuring distributed data consistency via Saga, CQRS, and Outbox patterns.</li>
+                    <li><strong>Native Interoperability:</strong> developed critical components in C++ to seamlessly integrate CLR-managed and native code blocks &mdash; see the <a href="native-dotnet-bridge.html" style="color: var(--accent-color);">interop bridge write-up</a>.</li>
                     <li><strong>Engineering Culture:</strong> practice DDD, SOLID, GoF. Established testing standards by implementing comprehensive unit and integration testing (xUnit, NSubstitute) and Test-Driven Development (TDD). Managed build and deployment workflows via Azure DevOps pipelines.</li>
-                    <li><strong>Team Upskilling:</strong> introduced agentic AI workflows (Claude Code) across the engineering team, raising development velocity.</li>
                 </ul>
                 <div class="project-links">
                     <a href="river-logic.html">Read the full case study &rarr;</a>
