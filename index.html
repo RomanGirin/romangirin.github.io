@@ -358,15 +358,24 @@
 
             <div class="job">
                 <div class="job-header">
-                    <h3>OOO "EcoSmart" &mdash; Samara, Russia</h3>
-                    <span class="job-dates">January 2020 &ndash; October 2022</span>
+                    <h3>Ecosmart LLC &mdash; Russia</h3>
+                    <span class="job-dates">September 2019 &ndash; October 2025</span>
                 </div>
                 <p class="job-role">Senior Computer Vision Engineer (Part-Time)</p>
+                <h4 class="job-subheading">ANPR System Development</h4>
                 <ul>
-                    <li><strong>ANPR system:</strong> designed and built a license-plate recognition system on custom deep networks (MTCNN detector + a custom recognizer net).</li>
-                    <li><strong>Architecture optimization:</strong> deep-dived the MTCNN pipeline and rebuilt detection around P-Net + O-Net only, dropping R-Net entirely &mdash; lower GPU load with no accuracy loss.</li>
-                    <li><strong>Data management:</strong> customized LabelImg to the company's metadata format, led an annotation team, built a dataset-validation pipeline, and set up on-prem data/experiment versioning (MLFlow, DVC).</li>
-                    <li><strong>Business result:</strong> automatic recognition of expected trucks at site entrances integrated with the logistics system eliminated vehicle downtime and sped up unloading.</li>
+                    <li><strong>System Design:</strong> designed and implemented an Automatic Number-Plate Recognition (ANPR) system driven by custom deep networks (MTCNN detector, STR-Net recognizer).</li>
+                    <li><strong>CNN Architecture Optimization:</strong> conducted deep structural analysis of MTCNN and re-engineered the detection pipeline around P-Net + O-Net, eliminating R-Net entirely &mdash; lower GPU load with zero accuracy degradation.</li>
+                    <li><strong>Real-Time Processing:</strong> implemented the core video-frame processing loop in C++, reaching 11&ndash;13.5&nbsp;ms (~75&ndash;90 fps) per frame &mdash; about 1.5&times; faster than the Python implementation.</li>
+                    <li><strong>Object Tracking:</strong> built and tuned a vehicle-tracking module on DeepSORT/BoT-SORT/StrongSORT, fine-tuning OSNet (Omni-Scale Network) for vehicle re-identification embeddings &mdash; 72% mAP, 94% Rank-1.</li>
+                    <li><strong>Data Management:</strong> customized LabelImg to the company's metadata format, led an annotation team, built a dataset-validation pipeline, and set up on-prem data/experiment versioning (MLFlow, DVC).</li>
+                    <li><strong>Business Impact:</strong> deployed across multiple sites &mdash; ALPR gives advance notice of road trains approaching unloading warehouses, eliminating delays entirely; also drives corporate-fleet tracking and automated gate access control at residential and industrial sites.</li>
+                </ul>
+                <h4 class="job-subheading">CCTV-Based Compliance Auditing</h4>
+                <ul>
+                    <li><strong>Detection System Development:</strong> built and trained an SSD (Single Shot MultiBox Detector)-based object detector to track specialized commercial cleaning vehicles in real-time video streams.</li>
+                    <li><strong>Data Engineering:</strong> automated data collection, filtering, and image preprocessing tuned for non-standard, changing indoor lighting conditions.</li>
+                    <li><strong>Business Impact:</strong> deployed across "Lastochka" express-train maintenance depots, eliminating cleaning-schedule violations and entirely preventing regulatory compliance penalties.</li>
                 </ul>
                 <div class="project-links">
                     <a href="anpr-project.html">Read the full case study &rarr;</a>
