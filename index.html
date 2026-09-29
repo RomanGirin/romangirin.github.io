@@ -289,16 +289,18 @@
                         custom deep networks (MTCNN plate
                         detector + a custom recognizer net). Re-architected the MTCNN detection pipeline down to
                         P-Net + O-Net only, dropping R-Net entirely to cut GPU load with no loss of accuracy.
-                        Built the supporting data pipeline &mdash; a customized LabelImg workflow, a managed
-                        annotation team, and dataset-validation, MLFlow/DVC experiment and data versioning.
-                        Auto-recognizing expected trucks at site entrances and pushing alerts into the logistics
-                        system eliminated vehicle downtime and sped up unloading.</p>
+                        Migrated the core video-frame processing loop to C++, reaching 11&ndash;13.5&nbsp;ms
+                        (~75&ndash;90 fps) per frame &mdash; about 1.5&times; faster than Python. Built the
+                        supporting data pipeline &mdash; a customized LabelImg workflow, a managed annotation
+                        team, and MLFlow experiment tracking. Auto-recognizing expected trucks at site entrances
+                        and pushing alerts into the logistics system eliminated vehicle downtime and sped up
+                        unloading.</p>
                     <ul class="tags" style="margin-bottom: 1rem;">
                         <li>PyTorch</li>
                         <li>MTCNN</li>
+                        <li>C++</li>
                         <li>OpenCV</li>
                         <li>MLFlow</li>
-                        <li>DVC</li>
                     </ul>
                     <div class="project-links" style="margin-top: 1rem;">
                         <a href="anpr-project.html">Details &rarr;</a>
