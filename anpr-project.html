@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ANPR / LPR Pipeline | Roman Girin</title>
-    <meta name="description" content="ANPR / license-plate recognition vehicle access-control system built by Roman Girin for OOO EcoSmart &mdash; custom MTCNN detector, plate recognizer, and production deployment.">
+    <meta name="description" content="ANPR / license-plate recognition vehicle access-control system built by Roman Girin for Ecosmart LLC &mdash; custom MTCNN detector, plate recognizer, and production deployment.">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f172a'/%3E%3Ctext x='32' y='43' font-family='Arial,Helvetica,sans-serif' font-size='26' font-weight='700' fill='%2338bdf8' text-anchor='middle'%3ERG%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,11 +67,12 @@
             <a class="back-link" href="ru/anpr-project.html">RU</a>
         </div>
         <h1>ANPR / License-Plate Recognition Pipeline</h1>
-        <p class="subtitle">OOO "EcoSmart" &mdash; vehicle access-control system</p>
+        <p class="subtitle">Ecosmart LLC &mdash; vehicle access-control system</p>
 
         <ul class="tags">
             <li>PyTorch</li>
             <li>MTCNN</li>
+            <li>C++</li>
             <li>OpenCV</li>
             <li>MLFlow</li>
             <li>DVC</li>
@@ -110,6 +111,7 @@
         <ul class="highlights">
             <li><strong>ANPR system design.</strong> Designed and built the vehicle automatic number-plate recognition (ANPR) system end to end, on custom deep networks (MTCNN, STR-Net).</li>
             <li><strong>MTCNN pipeline optimization.</strong> Ran an in-depth analysis of MTCNN and restructured the detection pipeline down to P-Net and O-Net only, dropping R-Net entirely &mdash; cutting GPU load with no loss in accuracy.</li>
+            <li><strong>Real-time C++ pipeline.</strong> Migrated the core video-frame processing loop from Python to C++, cutting per-frame processing time to 11&ndash;13.5&nbsp;ms (~75&ndash;90 fps) &mdash; about 1.5&times; faster than the Python implementation.</li>
             <li><strong>Dataset &amp; experiment tooling.</strong> Customized LabelImg for the company's metadata format, led the annotation team, and built the dataset validation pipeline; set up on-prem data/experiment versioning (MLFlow, DVC).</li>
             <li><strong>Business impact.</strong> Automatic recognition of expected truck convoys approaching the site, wired into the logistics notification system, eliminated vehicle downtime and sped up unloading.</li>
         </ul>
